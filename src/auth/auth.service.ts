@@ -10,9 +10,7 @@ import { compare } from 'bcrypt';
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private usersService: UsersService,
-  ) {}
+  constructor(private usersService: UsersService) {}
 
   async signIn(username: string, password: string): Promise<{ token: string }> {
     const user: User | null = await this.usersService.findOne(username);

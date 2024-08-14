@@ -1,5 +1,5 @@
 import { Role } from '@prisma/client';
-import { IsEmail, IsString, IsStrongPassword } from 'class-validator';
+import { IsEmail, IsString } from 'class-validator';
 
 export class CreateUserDto {
   @IsEmail()
@@ -18,8 +18,15 @@ export class CreateUserDto {
 }
 
 export type UserPayload = {
-  id: string,
-  username: string,
-  email: string,
-  balance: number
-}
+  id: string;
+  username: string;
+  email: string;
+  balance: number;
+};
+
+export type UserTokenPayload = {
+  id: string;
+  username: string;
+  role: Role;
+  iat: number;
+};

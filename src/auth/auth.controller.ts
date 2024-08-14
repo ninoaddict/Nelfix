@@ -6,10 +6,12 @@ import {
   Post,
   UseGuards,
   Get,
-  Request,
 } from '@nestjs/common';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
+import { RolesGuard } from 'src/roles/roles.guard';
+import { Roles } from 'src/roles/roles.decorator';
+import { Role } from '@prisma/client';
 
 @Controller('auth')
 export class AuthController {
@@ -24,9 +26,10 @@ export class AuthController {
     );
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
   @Get('profile')
+  @Roles(Role.USER)
   getProfile() {
-    return "SUCCESS";
+    return 'SUCCESS';
   }
 }

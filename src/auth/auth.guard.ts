@@ -9,7 +9,6 @@ import JwtService from 'src/lib/jwt';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
@@ -21,7 +20,7 @@ export class AuthGuard implements CanActivate {
 
       const payload = jwtService.decode(token);
       request['user'] = payload;
-      console.log(request);
+      console.log(request['user']);
     } catch {
       throw new UnauthorizedException();
     }

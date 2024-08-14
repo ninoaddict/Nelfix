@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateUserDto } from 'src/dto/create-user.dto';
+import { CreateUserDto } from 'src/dto/user.dto';
 import { hash } from 'bcrypt';
 
 @Injectable()
@@ -29,7 +29,7 @@ export class UsersService {
         name: userDto.name,
         email: userDto.email,
         password: hashed,
-        role: userDto.role ? userDto.role : "USER"
+        role: userDto.role ? userDto.role : 'USER',
       },
     });
   }
