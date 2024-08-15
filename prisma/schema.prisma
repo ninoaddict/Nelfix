@@ -17,22 +17,44 @@ enum Role {
     ADMIN
 }
 
+model Profile {
+    id         String  @id @default(cuid())
+    userId     String  @unique
+    first_name String
+    last_name  String
+    imageUrl   String?
+    user       User    @relation(fields: [userId], references: [id])
+
+    @@unique([first_name, last_name])
+}
+
 model User {
-    id        String   @id @default(cuid())
-    username  String   @unique
-    email     String   @unique
-    name      String?  @db.VarChar(200)
-    password  String
-    imageUrl  String?
-    balance   Int      @default(1000)
-    role      Role     @default(USER)
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    id             String           @id @default(cuid())
+    username       String           @unique
+    email          String           @unique
+    password       String
+    balance        Int              @default(1000)
+    role           Role             @default(USER)
+    createdAt      DateTime         @default(now())
+    updatedAt      DateTime         @updatedAt
+    Profile        Profile?
+    userBoughtFilm UserBoughtFilm[]
+}
+
+model UserBoughtFilm {
+    userId   String
+    filmId   String
+    boughtAt DateTime @default(now())
+    price    Int
+    user     User     @relation(fields: [userId], references: [id])
+    film     Film     @relation(fields: [filmId], references: [id])
+
+    @@id([userId, filmId])
 }
 
 model Film {
-    id              String   @id @default(cuid())
-    title           String   @db.VarChar(200)
+    id              String           @id @default(cuid())
+    title           String           @db.VarChar(200)
     description     String?
     director        String?
     release_year    Int
@@ -41,6 +63,7 @@ model Film {
     duration        Int
     video_url       String
     cover_image_url String
-    createdAt       DateTime @default(now())
-    updatedAt       DateTime @updatedAt
+    createdAt       DateTime         @default(now())
+    updatedAt       DateTime         @updatedAt
+    userBoughtFilm  UserBoughtFilm[]
 }

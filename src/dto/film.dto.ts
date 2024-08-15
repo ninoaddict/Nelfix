@@ -17,3 +17,14 @@ export type CreateFilmDto = {
   price: number;
   duration: number;
 };
+
+export type UpdateFilmDto = {
+  id: string;
+  title: string;
+  description: string;
+  director: string;
+  release_year: number;
+  genre: string[];
+  price: number;
+  duration: number;
+};

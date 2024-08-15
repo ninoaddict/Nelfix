@@ -1,8 +1,15 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Film } from '@prisma/client';
 import { S3 } from 'aws-sdk';
-import { CreateFilmDto, CreateFilmRaw } from 'src/dto/film.dto';
+import { CreateFilmDto, CreateFilmRaw, UpdateFilmDto } from 'src/dto/film.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const cuid = require('cuid');
 
 @Injectable()
 export class FilmService {
@@ -14,16 +21,20 @@ export class FilmService {
   });
 
   parseFilmData(filmRaw: CreateFilmRaw): CreateFilmDto {
-    const parsedData = {
-      title: filmRaw.title,
-      description: filmRaw.description,
-      director: filmRaw.director,
-      release_year: parseInt(filmRaw.release_year),
-      genre: JSON.parse(filmRaw.genre),
-      price: parseInt(filmRaw.price),
-      duration: parseInt(filmRaw.duration),
-    };
-    return parsedData;
+    try {
+      const parsedData = {
+        title: filmRaw.title,
+        description: filmRaw.description,
+        director: filmRaw.director,
+        release_year: parseInt(filmRaw.release_year),
+        genre: JSON.parse(filmRaw.genre),
+        price: parseInt(filmRaw.price),
+        duration: parseInt(filmRaw.duration),
+      };
+      return parsedData;
+    } catch (error) {
+      throw new BadRequestException();
+    }
   }
 
   async uploadFilm(
@@ -31,14 +42,21 @@ export class FilmService {
     cover_image: Express.Multer.File,
     filmDto: CreateFilmDto,
   ) {
-    if (!video) {
+    if (!video || !cover_image) {
       throw new BadRequestException();
     }
+    const id = cuid();
+    console.log(id);
 
+    video.filename = id + '_video';
     const video_url = await this.uploadFile(video);
+
+    cover_image.filename = id + '_cover_image';
     const cover_image_url = await this.uploadFile(cover_image);
+
     const new_film = await this.prisma.film.create({
       data: {
+        id,
         title: filmDto.title,
         description: filmDto.description,
         director: filmDto.director,
@@ -52,6 +70,65 @@ export class FilmService {
     });
     console.log(new_film);
     return new_film;
+  }
+
+  async updateFilm(
+    video: Express.Multer.File,
+    cover_image: Express.Multer.File,
+    filmDto: UpdateFilmDto,
+  ) {
+    try {
+      // update the film database
+      const data = await this.prisma.film.update({
+        where: {
+          id: filmDto.id,
+        },
+        data: {
+          title: filmDto.title,
+          description: filmDto.description,
+          director: filmDto.director,
+          release_year: filmDto.release_year,
+          genre: filmDto.genre,
+          price: filmDto.price,
+          duration: filmDto.duration,
+        },
+      });
+
+      // update the video if not null
+      if (video) {
+        video.filename = filmDto.id + '_video';
+        await this.uploadFile(video);
+      }
+
+      // update the cover image if not null
+      if (cover_image) {
+        cover_image.filename = filmDto.id + '_cover_image';
+        await this.uploadFile(cover_image);
+      }
+      return data;
+    } catch (error) {
+      throw new NotFoundException('Film not found');
+    }
+  }
+
+  async deleteFilm(id: string) {
+    try {
+      const data = await this.prisma.film.delete({
+        where: { id },
+      });
+      // delete video
+      const video = id + '_video';
+      await this.deleteFile(video);
+
+      // delete cover image
+      const cover_image = id + '_cover_image';
+      await this.deleteFile(cover_image);
+
+      return data;
+    } catch (error) {
+      console.log(error);
+      throw new NotFoundException('Film not found');
+    }
   }
 
   async getAllFilms(query: string) {
@@ -82,21 +159,25 @@ export class FilmService {
   }
 
   async getFilmById(id: string) {
-    return await this.prisma.film.findFirst({
+    const film = await this.prisma.film.findFirst({
       where: {
-        id: id,
+        id,
       },
     });
+    if (film) {
+      return film;
+    } else {
+      throw new NotFoundException('Film not found');
+    }
   }
 
   async uploadFile(file: Express.Multer.File) {
     const res = await this.uploadS3Bucket(
       file.buffer,
       process.env.AWS_S3_BUCKET,
-      file.originalname,
+      file.filename ? file.filename : file.originalname,
       file.mimetype,
     );
-    console.log(res.Location);
     return res.Location;
   }
 
@@ -114,12 +195,19 @@ export class FilmService {
       ContentType: mimetype,
       ContentDisposition: 'inline',
     };
-    console.log(params);
-    try {
-      const res = await this.s3.upload(params).promise();
-      return res;
-    } catch (error) {
-      console.log(error);
-    }
+    return this.s3.upload(params).promise();
+  }
+
+  async deleteFile(name: string) {
+    const data = await this.deleteS3Bucket(process.env.AWS_S3_BUCKET, name);
+    console.log(data);
+  }
+
+  async deleteS3Bucket(bucket: string, name: string) {
+    const params = {
+      Bucket: bucket,
+      Key: name,
+    };
+    return this.s3.deleteObject(params).promise();
   }
 }

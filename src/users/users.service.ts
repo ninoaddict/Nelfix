@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { User } from '@prisma/client';
+import { User, Role } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from 'src/dto/user.dto';
 import { hash } from 'bcrypt';
@@ -20,17 +20,33 @@ export class UsersService {
     return this.prisma.user.findMany();
   }
 
+  async findAllUser(): Promise<User[] | null> {
+    return this.prisma.user.findMany({
+      where: {
+        role: Role.USER,
+      },
+    });
+  }
+
   async create(userDto: CreateUserDto): Promise<User | null> {
     const hashed = await hash(userDto.password, 10);
 
-    return await this.prisma.user.create({
+    const user = await this.prisma.user.create({
       data: {
         username: userDto.username,
-        name: userDto.name,
         email: userDto.email,
         password: hashed,
         role: userDto.role ? userDto.role : 'USER',
       },
     });
+
+    await this.prisma.profile.create({
+      data: {
+        userId: user.id,
+        first_name: userDto.first_name,
+        last_name: userDto.last_name,
+      },
+    });
+    return user;
   }
 }
