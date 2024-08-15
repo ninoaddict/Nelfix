@@ -24,21 +24,23 @@ model User {
     name      String?  @db.VarChar(200)
     password  String
     imageUrl  String?
-    balance   Int    @default(1000)
+    balance   Int      @default(1000)
     role      Role     @default(USER)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
 
 model Film {
-    id           String   @id @default(cuid())
-    title        String   @db.VarChar(200)
-    description  String?
-    director     String?
-    release_year Int
-    genre        String[]
-    price        Float
-    duration     Int
-    videoUrl     String
-    coverUrl     String
+    id              String   @id @default(cuid())
+    title           String   @db.VarChar(200)
+    description     String?
+    director        String?
+    release_year    Int
+    genre           String[]
+    price           Float
+    duration        Int
+    video_url       String
+    cover_image_url String
+    createdAt       DateTime @default(now())
+    updatedAt       DateTime @updatedAt
 }

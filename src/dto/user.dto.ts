@@ -30,3 +30,11 @@ export type UserTokenPayload = {
   role: Role;
   iat: number;
 };
+
+export class LoginDto {
+  @IsString()
+  username: string;
+
+  @IsString()
+  password: string;
+}

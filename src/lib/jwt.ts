@@ -67,7 +67,7 @@ export default function JwtService(_key: string) {
           throw new Error('Token issued in the future');
         }
 
-        if (currTime > res.iat + 30) {
+        if (currTime > res.iat + 2592000) {
           throw new Error('Token expired');
         }
 

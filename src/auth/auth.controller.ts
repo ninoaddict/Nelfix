@@ -1,35 +1,19 @@
-import {
-  Body,
-  Controller,
-  HttpCode,
-  HttpStatus,
-  Post,
-  UseGuards,
-  Get,
-} from '@nestjs/common';
-import { AuthGuard } from './auth.guard';
+import { Body, Controller, Post, UseInterceptors } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { RolesGuard } from 'src/roles/roles.guard';
-import { Roles } from 'src/roles/roles.decorator';
-import { Role } from '@prisma/client';
+import { LoginDto } from 'src/dto/user.dto';
+import { NoFilesInterceptor } from '@nestjs/platform-express';
+import { UserValidationPipe } from 'src/users/validation.pipe';
 
-@Controller('auth')
+@Controller('')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @HttpCode(HttpStatus.OK)
   @Post('login')
-  async signIn(@Body() signInDto: Record<string, any>) {
+  @UseInterceptors(NoFilesInterceptor())
+  async signIn(@Body(new UserValidationPipe()) signInDto: LoginDto) {
     return await this.authService.signIn(
       signInDto.username,
       signInDto.password,
     );
-  }
-
-  @UseGuards(AuthGuard, RolesGuard)
-  @Get('profile')
-  @Roles(Role.USER)
-  getProfile() {
-    return 'SUCCESS';
   }
 }

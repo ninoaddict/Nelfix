@@ -1,7 +1,12 @@
-
-import { PipeTransform, Injectable, ArgumentMetadata, BadRequestException } from '@nestjs/common';
+import {
+  PipeTransform,
+  Injectable,
+  ArgumentMetadata,
+  BadRequestException,
+} from '@nestjs/common';
 import { validate } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
+import { ZodSchema } from 'zod';
 
 @Injectable()
 export class UserValidationPipe implements PipeTransform<any> {
@@ -17,8 +22,22 @@ export class UserValidationPipe implements PipeTransform<any> {
     return value;
   }
 
-  private toValidate(metatype: Function): boolean {
-    const types: Function[] = [String, Boolean, Number, Array, Object];
+  private toValidate(metatype): boolean {
+    const types = [String, Boolean, Number, Array, Object];
     return !types.includes(metatype);
+  }
+}
+
+export class ZodValidationPipe implements PipeTransform {
+  constructor(private schema: ZodSchema) {}
+
+  transform(value) {
+    console.log(value);
+    try {
+      const parsedValue = this.schema.parse(value);
+      return parsedValue;
+    } catch (error) {
+      throw new BadRequestException('Validation failed');
+    }
   }
 }
