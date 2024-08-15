@@ -27,7 +27,7 @@ export class FilmService {
         description: filmRaw.description,
         director: filmRaw.director,
         release_year: parseInt(filmRaw.release_year),
-        genre: JSON.parse(filmRaw.genre),
+        genre: filmRaw.genre,
         price: parseInt(filmRaw.price),
         duration: parseInt(filmRaw.duration),
       };

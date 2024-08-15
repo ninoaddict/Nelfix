@@ -7,12 +7,13 @@ import { UsersService } from 'src/users/users.service';
 import { User } from '@prisma/client';
 import JwtService from 'src/lib/jwt';
 import { compare } from 'bcrypt';
+import { Request } from 'express';
 
 @Injectable()
 export class AuthService {
   constructor(private usersService: UsersService) {}
 
-  async signIn(username: string, password: string): Promise<{ token: string }> {
+  async signIn(username: string, password: string) {
     const user: User | null = await this.usersService.findOne(username);
     if (!user) {
       throw new NotFoundException();
@@ -32,7 +33,29 @@ export class AuthService {
     const jwtService = JwtService(process.env.SECRET);
 
     return {
-      token: jwtService.encode(payload),
+      status: 'success',
+      message: 'Successfully logged in',
+      data: {
+        username: user.username,
+        token: jwtService.encode(payload),
+      },
     };
+  }
+
+  self(request: Request) {
+    const token = this.extractToken(request);
+    return {
+      status: 'success',
+      message: 'Get self',
+      data: {
+        username: request['user']['username'],
+        token,
+      },
+    };
+  }
+
+  extractToken(request: Request): string | undefined {
+    const [type, token] = request.headers.authorization?.split(' ') ?? [];
+    return type === 'Bearer' ? token : undefined;
   }
 }

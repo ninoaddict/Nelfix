@@ -3,7 +3,7 @@ export type CreateFilmRaw = {
   description: string;
   director: string;
   release_year: string;
-  genre: string;
+  genre: string[];
   price: string;
   duration: string;
 };

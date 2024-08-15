@@ -53,7 +53,7 @@ export class UsersController {
   }
 
   @Get()
-  @UseGuards(AuthGuard, RolesGuard)
+  @UseGuards(AuthGuard)
   @Roles(Role.ADMIN)
   async findOne(@Param('id') id: string) {
     const user: User = await this.usersService.findOne(id);
