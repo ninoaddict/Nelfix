@@ -94,13 +94,16 @@ export class UsersService {
       },
     });
 
-    await this.prisma.profile.create({
-      data: {
-        userId: user.id,
-        first_name: userDto.first_name,
-        last_name: userDto.last_name,
-      },
-    });
+    if (user && user.role === 'USER') {
+      await this.prisma.profile.create({
+        data: {
+          userId: user.id,
+          first_name: userDto.first_name,
+          last_name: userDto.last_name,
+        },
+      });
+    }
+
     return user;
   }
 }

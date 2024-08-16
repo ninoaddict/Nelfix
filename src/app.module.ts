@@ -7,6 +7,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { FilmModule } from './film/film.module';
 import { BrowseModule } from './browse/browse.module';
 import { AuthMiddleware } from './auth/auth.middleware';
+import { BrowseController } from './browse/browse.controller';
 
 @Module({
   imports: [UsersModule, AuthModule, PrismaModule, FilmModule, BrowseModule],
@@ -15,6 +16,6 @@ import { AuthMiddleware } from './auth/auth.middleware';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes(AppController);
+    consumer.apply(AuthMiddleware).forRoutes(AppController, BrowseController);
   }
 }

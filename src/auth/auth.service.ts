@@ -33,12 +33,9 @@ export class AuthService {
     const jwtService = JwtService(process.env.SECRET);
 
     return {
-      status: 'success',
-      message: 'Successfully logged in',
-      data: {
-        username: user.username,
-        token: jwtService.encode(payload),
-      },
+      username: user.username,
+      token: jwtService.encode(payload),
+      iat: payload.iat,
     };
   }
 
