@@ -1,7 +1,9 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  NotFoundException,
   Param,
   Post,
   UseGuards,
@@ -52,11 +54,14 @@ export class UsersController {
     };
   }
 
-  @Get()
-  @UseGuards(AuthGuard)
+  @Get(':id')
+  @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.ADMIN)
   async findOne(@Param('id') id: string) {
     const user: User = await this.usersService.findOne(id);
+    if (!user) {
+      throw new NotFoundException();
+    }
     const data = {
       id: user.id,
       username: user.username,
@@ -66,6 +71,49 @@ export class UsersController {
     return {
       status: 'success',
       message: 'Get user by ID',
+      data,
+    };
+  }
+
+  @Post(':id/balance')
+  @UseInterceptors(NoFilesInterceptor())
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
+  async increaseBalance(
+    @Param('id') id: string,
+    @Body('increment') inc: string,
+  ) {
+    const user = await this.usersService.increaseBalance(
+      id,
+      this.usersService.parseBalance(inc),
+    );
+    const data = {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      balance: user.balance,
+    };
+    return {
+      status: 'success',
+      message: 'Update balance',
+      data,
+    };
+  }
+
+  @Delete(':id')
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
+  async deleteUser(@Param('id') id: string) {
+    const user = await this.usersService.deleteUser(id);
+    const data = {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      balance: user.balance,
+    };
+    return {
+      status: 'success',
+      message: 'Update balance',
       data,
     };
   }

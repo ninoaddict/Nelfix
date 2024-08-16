@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { User, Role } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from 'src/dto/user.dto';
@@ -16,6 +20,15 @@ export class UsersService {
     });
   }
 
+  async findOneById(id: string): Promise<User | null> {
+    return this.prisma.user.findUnique({
+      where: {
+        id: id,
+        role: Role.USER,
+      },
+    });
+  }
+
   async findAll(): Promise<User[] | null> {
     return this.prisma.user.findMany();
   }
@@ -26,6 +39,47 @@ export class UsersService {
         role: Role.USER,
       },
     });
+  }
+
+  parseBalance(inc: string): number {
+    try {
+      const res = parseInt(inc);
+      return res;
+    } catch (error) {
+      throw new BadRequestException();
+    }
+  }
+
+  async increaseBalance(id: string, balance: number) {
+    const user = await this.findOneById(id);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const updatedUser = await this.prisma.user.update({
+      where: {
+        id: id,
+        role: Role.USER,
+      },
+      data: {
+        balance: balance + user.balance,
+      },
+    });
+    return updatedUser;
+  }
+
+  async deleteUser(id: string) {
+    try {
+      const user = await this.prisma.user.delete({
+        where: {
+          id: id,
+          role: Role.USER,
+        },
+      });
+      return user;
+    } catch (error) {
+      throw new NotFoundException('User not found');
+    }
   }
 
   async create(userDto: CreateUserDto): Promise<User | null> {

@@ -23,7 +23,7 @@ model Profile {
     first_name String
     last_name  String
     imageUrl   String?
-    user       User    @relation(fields: [userId], references: [id])
+    user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@unique([first_name, last_name])
 }
