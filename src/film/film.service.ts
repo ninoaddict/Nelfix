@@ -158,6 +158,35 @@ export class FilmService {
     return res;
   }
 
+  async getFilmsByCursor(cursor: number, limit: number, query: string) {
+    const data: Film[] = await this.prisma.film.findMany({
+      where: {
+        OR: [
+          {
+            title: {
+              contains: query,
+              mode: 'insensitive',
+            },
+          },
+          {
+            director: {
+              contains: query,
+              mode: 'insensitive',
+            },
+          },
+        ],
+      },
+      skip: limit * (cursor - 1),
+      take: limit,
+    });
+    const res = data.map((f) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { description, video_url, ...r } = f;
+      return r;
+    });
+    return res;
+  }
+
   async getFilmById(id: string) {
     const film = await this.prisma.film.findFirst({
       where: {

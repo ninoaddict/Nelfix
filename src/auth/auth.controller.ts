@@ -36,4 +36,9 @@ export class AuthController {
   getSelf(@Req() req: Request) {
     return this.authService.self(req);
   }
+
+  @Get('auth/login')
+  getLogin() {
+    return 'Hello World!';
+  }
 }

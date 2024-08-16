@@ -7,5 +7,6 @@ import { PrismaModule } from 'src/prisma/prisma.module';
   imports: [PrismaModule],
   providers: [FilmService],
   controllers: [FilmController],
+  exports: [FilmService],
 })
 export class FilmModule {}
