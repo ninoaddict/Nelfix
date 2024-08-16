@@ -17,7 +17,8 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "tailwind:css": "postcss public/stylesheets/tailwind.css -o public/stylesheets/style.css"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.631.0",
@@ -25,6 +26,7 @@
     "@nestjs/core": "^10.0.0",
     "@nestjs/platform-express": "^10.0.0",
     "@prisma/client": "^5.18.0",
+    "autoprefixer": "^10.4.20",
     "aws-sdk": "^2.1675.0",
     "bcrypt": "^5.1.1",
     "class-transformer": "^0.5.1",
@@ -32,8 +34,11 @@
     "cuid": "^3.0.0",
     "ejs": "^3.1.10",
     "hbs": "^4.2.0",
+    "postcss": "^8.4.41",
+    "postcss-cli": "^11.0.0",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
+    "tailwindcss": "^3.4.10",
     "zod": "^3.23.8"
   },
   "devDependencies": {
