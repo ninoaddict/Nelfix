@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -188,7 +189,7 @@ export class FilmService {
   }
 
   async getFilmById(id: string) {
-    const film = await this.prisma.film.findFirst({
+    const film = await this.prisma.film.findUnique({
       where: {
         id,
       },
@@ -197,6 +198,35 @@ export class FilmService {
       return film;
     } else {
       throw new NotFoundException('Film not found');
+    }
+  }
+
+  async getFilmBought(filmId: string, userId: string) {
+    return await this.prisma.userBoughtFilm.findFirst({
+      where: {
+        filmId,
+        userId,
+      },
+    });
+  }
+
+  async buyFilm(filmId: string, userId: string) {
+    const film = await this.getFilmById(userId);
+    try {
+      const data = await this.prisma.userBoughtFilm.create({
+        data: {
+          filmId,
+          userId,
+          price: film.price,
+        },
+      });
+      return {
+        message: 'Film bought successfully',
+        status: 'success',
+        data,
+      };
+    } catch (error) {
+      throw new ConflictException('Film has been bought');
     }
   }
 

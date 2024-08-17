@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="/stylesheets/style.css">
+  <link rel="icon" href="/images/logo.png">
+  <link href="//vjs.zencdn.net/8.3.0/video-js.min.css" rel="stylesheet">
+  <script src="//vjs.zencdn.net/8.3.0/video.min.js"></script>
+  <title>
+    <%= film.title %>
+  </title>
+  <script src="https://kit.fontawesome.com/d0a301b89a.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.js"></script>
+</head>
+
+<body class="bg-slate-900 text-gray-100">
+  <nav class="border-gray-600 bg-slate-800 fixed w-full z-20 top-0 start-0">
+    <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+      <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
+        <img src="/images/logo.png" class="h-8" alt="Nelfix Logo" />
+        <span class="self-center text-2xl font-semibold whitespace-nowrap text-white">Nelfix</span>
+      </a>
+      <button data-collapse-toggle="navbar-default" type="button"
+        class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm rounded-lg md:hidden focus:outline-none focus:ring-2 text-gray-400 hover:bg-gray-700 focus:ring-gray-600"
+        aria-controls="navbar-default" aria-expanded="false">
+        <span class="sr-only">Open main menu</span>
+        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M1 1h15M1 7h15M1 13h15" />
+        </svg>
+      </button>
+      <div class="hidden w-full md:block md:w-auto" id="navbar-default">
+        <ul
+          class="font-medium flex flex-col p-4 md:p-0 mt-4 border rounded-lg md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 bg-slate-800 md:bg-slate-800 border-gray-700">
+          <li>
+            <a href="/"
+              class="block py-2 px-3 rounded md:border-0 md:p-0 text-white md:hover:text-slate-500 hover:bg-gray-700 hover:text-white md:hover:bg-transparent">Home</a>
+          </li>
+          <li>
+            <a href="/mylist"
+              class="block py-2 px-3 rounded md:border-0 md:p-0 text-white md:hover:text-slate-500 hover:bg-gray-700 hover:text-white md:hover:bg-transparent">My
+              List</a>
+          </li>
+          <li>
+            <a href="/profile"
+              class="block py-2 px-3 rounded md:border-0 md:p-0 text-white md:hover:text-slate-500 hover:bg-gray-700 hover:text-white md:hover:bg-transparent">
+              <p class="md:hidden">Profile</p>
+              <img class="w-6 p-0.5 rounded-full ring-2 ring-gray-500 h-6 hover:bg-slate-400 md:block hidden"
+                src="/images/user.png" alt="avatar">
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container mx-auto p-4 mt-20 min-h-[80vh]">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-4xl font-bold text-white">
+        <%= film.title %>
+      </h1>
+      <button id="play-button"
+        class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-3 rounded-lg shadow-lg transition ease-in-out duration-300">
+        Play Now
+      </button>
+    </div>
+
+    <div class="mt-4 video-container" id="video-container">
+      <div class="rounded-lg overflow-hidden shadow-lg">
+        <video id="my-video" class="video-js vjs-fluid" controls preload="auto" controlslist="nodownload"
+          poster="<%= film.cover_image_url %>"
+          data-setup='{ "playbackRates": [0.5, 1, 1.5, 2], "responsive": true, "controlBar": { "skipButtons": { "backward": 5, "forward": 5 } } }'>
+          <source src="<%= film.video_url %>" type="video/mp4" />
+          <p class="vjs-no-js">
+            To view this video please enable JavaScript, and consider upgrading to a
+            web browser that
+            <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+          </p>
+        </video>
+      </div>
+    </div>
+
+    <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div>
+        <h2 class="text-2xl font-semibold text-blue-400 mb-4">Details</h2>
+        <p class="mb-2"><strong class="font-semibold text-blue-300">Description:</strong>
+          <%= film.description %>
+        </p>
+        <p class="mb-2"><strong class="font-semibold text-blue-300">Genres:</strong>
+          <%= film.genre.join(', ') %></p>
+        <p class="mb-2"><strong class="font-semibold text-blue-300">Director:</strong> <%= film.director %></p>
+        <p class="mb-2"><strong class="font-semibold text-blue-300">Release Year:</strong> <%= film.release_year %></p>
+        <p class="mb-2"><strong class="font-semibold text-blue-300">Duration:</strong> <%= film.duration %> minutes</p>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    var player = videojs('my-video', {
+      userActions: {
+        hotkeys: function(event) {
+          console.log(event.which);
+          if (event.which === 37) {
+            this.currentTime(this.currentTime() - 5);
+          }
+          if (event.which === 39) {
+            this.currentTime(this.currentTime() + 5);
+          }
+        }
+      }
+    });
+  </script>
+
+  <footer class="rounded-lg shadow bg-slate-800 py-5">
+    <div class="w-full max-w-screen-xl mx-auto p-4">
+      <span class="block text-sm text-center text-gray-400">© 2024 <a href="/" class="hover:underline">Nelfix™</a>. All
+        Rights Reserved.</span>
+    </div>
+  </footer>
+
+</body>
+
+</html>

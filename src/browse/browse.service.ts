@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { Request } from 'express';
 import { FilmService } from 'src/film/film.service';
 
 @Injectable()
@@ -37,6 +38,25 @@ export class BrowseService {
       upperPage,
       maxPage,
       query,
+    };
+  }
+
+  async detail(req: Request, filmId: string) {
+    let isBought = false;
+    const film = await this.filmService.getFilmById(filmId);
+    if (req['user']) {
+      const boughtData = await this.filmService.getFilmBought(
+        filmId,
+        req['user'].id,
+      );
+      if (boughtData) {
+        isBought = true;
+      }
+    }
+    console.log(isBought);
+    return {
+      isBought,
+      film,
     };
   }
 }

@@ -1,5 +1,6 @@
-import { Controller, Get, Query, Render } from '@nestjs/common';
+import { Controller, Get, Param, Query, Render, Req } from '@nestjs/common';
 import { BrowseService } from './browse.service';
+import { Request } from 'express';
 
 @Controller('browse')
 export class BrowseController {
@@ -17,5 +18,11 @@ export class BrowseController {
       page ? page : 1,
       limit ? limit : 12,
     );
+  }
+
+  @Get(':id')
+  @Render('detail')
+  async detail(@Req() req: Request, @Param('id') id: string) {
+    return await this.browseService.detail(req, id);
   }
 }
