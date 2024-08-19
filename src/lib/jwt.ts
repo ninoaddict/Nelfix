@@ -28,8 +28,10 @@ export default function JwtService(_key: string) {
     const checkSum = hash
       .update(checkSumStr)
       .digest('base64')
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
       .replace(/=+$/, '');
-    return encodeBase64(checkSum);
+    return checkSum;
   }
 
   const alg = { alg: 'HS256', typ: 'JWT' };

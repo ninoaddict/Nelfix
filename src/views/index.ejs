@@ -79,7 +79,7 @@
           <div class="max-w-xs bg-gray-800 text-white rounded-lg shadow-lg overflow-hidden mx-auto w-48 xl:w-52">
             <img class="object-cover h-[250px] w-full" src="<%= film.cover_image_url %>" alt="Movie Cover">
             <div class="px-4 py-2">
-              <h3 class="text-center mb-1 text-md text-nowrap">
+              <h3 class="text-center mb-1 text-md text-nowrap overflow-hidden">
                 <%= film.title %>
               </h3>
               <div class="flex justify-evenly text-gray-400 text-xs">
@@ -116,7 +116,7 @@
           </li>
           <% for( let index=lowerPage; index <=upperPage; index++ ) { %>
           <li>
-            <a href="/browse?query=<%= query %>&page=<%= index %>" class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+            <a href="/browse?query=<%= query %>&page=<%= index %>" class="flex items-center justify-center px-4 h-10 leading-tight border border-gray-700 <%= index == page ? 'bg-gray-700 text-white' : 'bg-gray-800 text-gray-400' %> hover:bg-gray-700 hover:text-white">
               <%= index %>
             </a>
           </li>
