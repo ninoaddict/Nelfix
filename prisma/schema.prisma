@@ -33,7 +33,7 @@ model User {
     username       String           @unique
     email          String           @unique
     password       String
-    balance        Int              @default(1000)
+    balance        Int              @default(100)
     role           Role             @default(USER)
     createdAt      DateTime         @default(now())
     updatedAt      DateTime         @updatedAt
@@ -66,4 +66,6 @@ model Film {
     created_at       DateTime         @default(now())
     updated_at       DateTime         @updatedAt
     userBoughtFilm  UserBoughtFilm[]
+
+    @@unique([title, director, release_year])
 }

@@ -47,7 +47,6 @@ export class FilmService {
       throw new BadRequestException();
     }
     const id = cuid();
-    console.log(id);
 
     video.filename = id + '_video';
     const video_url = await this.uploadFile(video);
