@@ -43,6 +43,7 @@ export class BrowseService {
       res = {
         username: user.username,
         balance: user.balance,
+        email: user.email,
       };
     }
 
@@ -77,6 +78,7 @@ export class BrowseService {
         res = {
           username: user.username,
           balance: user.balance,
+          email: user.email,
         };
       }
     }

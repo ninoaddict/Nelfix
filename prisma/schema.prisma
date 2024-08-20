@@ -46,8 +46,8 @@ model UserBoughtFilm {
     filmId   String
     boughtAt DateTime @default(now())
     price    Int
-    user     User     @relation(fields: [userId], references: [id])
-    film     Film     @relation(fields: [filmId], references: [id])
+    user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    film     Film     @relation(fields: [filmId], references: [id], onDelete: Cascade)
 
     @@id([userId, filmId])
 }

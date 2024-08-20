@@ -12,10 +12,17 @@ import { hash } from 'bcrypt';
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  async findOne(_username: string): Promise<User | null> {
-    return this.prisma.user.findUnique({
+  async findOne(usernameOrEmail: string): Promise<User | null> {
+    return this.prisma.user.findFirst({
       where: {
-        username: _username,
+        OR: [
+          {
+            username: usernameOrEmail,
+          },
+          {
+            email: usernameOrEmail,
+          },
+        ],
       },
     });
   }

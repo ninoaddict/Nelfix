@@ -58,6 +58,7 @@ export class MylistService {
       user: {
         username: user.username,
         balance: user.balance,
+        email: user.email,
       },
     };
   }

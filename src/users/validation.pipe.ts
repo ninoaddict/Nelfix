@@ -19,6 +19,7 @@ export class UserValidationPipe implements PipeTransform<any> {
     if (errors.length > 0) {
       throw new BadRequestException('Validation failed');
     }
+    console.log(value);
     return value;
   }
 

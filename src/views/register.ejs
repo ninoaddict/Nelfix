@@ -18,28 +18,33 @@
       </h1>
     </section>
     <section id="form" class="flex flex-col items-center gap-2 bg-slate-800 p-6 md:p-8 rounded-lg w-full max-w-sm">
-      <h1 class="lg:text-3xl font-semibold text-2xl text-slate-200">Login</h1>
+      <h1 class="lg:text-3xl font-semibold text-2xl text-slate-200">Register</h1>
       <form class="max-w-sm mx-auto w-full">
         <div class="mb-5">
           <label for="email" class="block mb-2 text-sm font-medium text-white">Email</label>
-          <input type="email" id="email" class="border text-sm rounded-lg block w-full p-2 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500" required />
+          <input type="text" id="email" class="border text-sm rounded-lg block w-full p-2 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500" />
+          <p id="email-error" class="mt-2 text-xs text-red-400"></p>
         </div>
         <div class="mb-5">
           <label for="username" class="block mb-2 text-sm font-medium text-white">Username</label>
-          <input type="text" id="username" class="border text-sm rounded-lg block w-full p-2 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500" required />
+          <input type="text" id="username" class="border text-sm rounded-lg block w-full p-2 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500" />
+          <p id="username-error" class="mt-2 text-xs text-red-400"></p>
         </div>
         <div class="mb-5">
           <label for="first_name" class="block mb-2 text-sm font-medium text-white">First Name</label>
-          <input type="text" id="first_name" class="border text-sm rounded-lg block w-full p-2 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500" required />
+          <input type="text" id="first_name" class="border text-sm rounded-lg block w-full p-2 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500" />
+          <p id="first_name-error" class="mt-2 text-xs text-red-400"></p>
         </div>
         <div class="mb-5">
           <label for="last_name" class="block mb-2 text-sm font-medium text-white">Last Name</label>
-          <input type="text" id="last_name" class="border text-sm rounded-lg block w-full p-2 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500" required />
+          <input type="text" id="last_name" class="border text-sm rounded-lg block w-full p-2 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500" />
+          <p id="last_name-error" class="mt-2 text-xs text-red-400"></p>
         </div>
         <div class="mb-5">
           <label for="password" class="block mb-2 text-sm font-medium text-white">
             Password</label>
-          <input type="password" id="password" class="border text-sm rounded-lg block w-full p-2 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500" required />
+          <input type="password" id="password" class="border text-sm rounded-lg block w-full p-2 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500" />
+          <p id="password-error" class="mt-2 text-xs text-red-400"></p>
         </div>
         <button type="submit" id="submit-button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
       </form>
@@ -74,15 +79,87 @@
     </div>
   </main>
 
-  <script>
+  <script type="module">
+    import {
+      validateEmail,
+      validateUsername,
+      validatePassword,
+      validateFirstName,
+      validateLastName
+    } from '/script/index.js';
+
     async function onSubmit(e) {
       e.preventDefault();
       document.getElementById('submit-button').disabled = true;
+      document.getElementById('submit-button').innerHTML = '<div role="status"><svg aria-hidden="true" class="w-5 h-5 animate-spin text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/><path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/></svg><span class="sr-only">Loading...</span></div>';
       const username = document.getElementById('username').value;
       const password = document.getElementById('password').value;
       const email = document.getElementById('email').value;
       const first_name = document.getElementById('first_name').value;
       const last_name = document.getElementById('last_name').value;
+
+      let isValid = true;
+
+      const uval = validateUsername(username);
+      document.getElementById('username-error').innerText = uval;
+      if (uval) {
+        isValid = false;
+        document.getElementById('username').classList.remove('border-gray-600');
+        document.getElementById('username').classList.add('border-red-600');
+      } else {
+        document.getElementById('username').classList.add('border-gray-600');
+        document.getElementById('username').classList.remove('border-red-600');
+      }
+
+      const pval = validatePassword(password, 8);
+      document.getElementById('password-error').innerText = pval;
+      if (pval) {
+        isValid = false;
+        document.getElementById('password').classList.remove('border-gray-600');
+        document.getElementById('password').classList.add('border-red-600');
+      } else {
+        document.getElementById('password').classList.add('border-gray-600');
+        document.getElementById('password').classList.remove('border-red-600');
+      }
+
+      const emval = validateEmail(email);
+      document.getElementById('email-error').innerText = emval;
+      if (emval) {
+        isValid = false;
+        document.getElementById('email').classList.remove('border-gray-600');
+        document.getElementById('email').classList.add('border-red-600');
+      } else {
+        document.getElementById('email').classList.add('border-gray-600');
+        document.getElementById('email').classList.remove('border-red-600');
+      }
+
+      const fnval = validateFirstName(first_name);
+      document.getElementById('first_name-error').innerText = fnval;
+      if (fnval) {
+        isValid = false;
+        document.getElementById('first_name').classList.remove('border-gray-600');
+        document.getElementById('first_name').classList.add('border-red-600');
+      } else {
+        document.getElementById('first_name').classList.add('border-gray-600');
+        document.getElementById('first_name').classList.remove('border-red-600');
+      }
+
+      const lnval = validateLastName(last_name);
+      document.getElementById('last_name-error').innerText = lnval;
+      if (lnval) {
+        isValid = false;
+        document.getElementById('last_name').classList.remove('border-gray-600');
+        document.getElementById('last_name').classList.add('border-red-600');
+      } else {
+        document.getElementById('last_name').classList.add('border-gray-600');
+        document.getElementById('last_name').classList.remove('border-red-600');
+      }
+
+      if (!isValid) {
+        document.getElementById('submit-button').innerHTML = "Submit";
+        document.getElementById('submit-button').disabled = false;
+        return;
+      }
 
       const formData = new FormData();
       formData.append('username', username);
@@ -97,9 +174,10 @@
           body: formData,
         });
 
+        document.getElementById('submit-button').innerHTML = "Submit";
         document.getElementById('submit-button').disabled = false;
+
         const data = await response.json();
-        console.log(data);
         if (response.ok) {
           window.location.replace('/');
         } else {
@@ -107,8 +185,9 @@
           document.getElementById('toast-danger').classList.remove('hidden');
         }
       } catch (error) {
+        document.getElementById('submit-button').innerHTML = "Submit";
         document.getElementById('submit-button').disabled = false;
-        console.log(error);
+        document.getElementById('toast-danger').classList.remove('hidden');
       }
     }
     document.getElementById('form').addEventListener('submit', onSubmit);
