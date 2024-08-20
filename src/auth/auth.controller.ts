@@ -6,6 +6,7 @@ import {
   Post,
   Req,
   Res,
+  UnauthorizedException,
   UseInterceptors,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -33,20 +34,24 @@ export class AuthController {
       signInDto.username,
       signInDto.password,
     );
-    res.cookie('jwt-nelfix', data.token, {
-      httpOnly: true,
-      secure: false,
-      expires: new Date((data.iat + 2592000) * 1000),
-    });
+    if (data.payload.role === 'USER') {
+      res.cookie('jwt-nelfix', data.token, {
+        httpOnly: true,
+        secure: false,
+        expires: new Date((data.payload.iat + 2592000) * 1000),
+      });
 
-    res.json({
-      status: 'success',
-      message: 'Sucessfully login',
-      data: {
-        username: data.username,
-        token: data.token,
-      },
-    });
+      res.json({
+        status: 'success',
+        message: 'Sucessfully login',
+        data: {
+          username: data.username,
+          token: data.token,
+        },
+      });
+    } else {
+      throw new UnauthorizedException('Please login as a user');
+    }
   }
 
   @Get('register')
@@ -73,7 +78,7 @@ export class AuthController {
     res.cookie('jwt-nelfix', data.token, {
       httpOnly: true,
       secure: false,
-      expires: new Date((data.iat + 2592000) * 1000),
+      expires: new Date((data.payload.iat + 2592000) * 1000),
     });
 
     res.json({

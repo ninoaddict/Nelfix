@@ -188,6 +188,89 @@ export class FilmService {
     return res;
   }
 
+  async getBoughtFilms(userId: string, query: string) {
+    const userWithFilms = await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      include: {
+        userBoughtFilm: {
+          where: {
+            film: {
+              OR: [
+                {
+                  title: {
+                    contains: query,
+                    mode: 'insensitive',
+                  },
+                },
+                {
+                  director: {
+                    contains: query,
+                    mode: 'insensitive',
+                  },
+                },
+              ],
+            },
+          },
+          include: {
+            film: true,
+          },
+        },
+      },
+    });
+
+    const films = userWithFilms?.userBoughtFilm.map(
+      (relation) => relation.film,
+    );
+    return films;
+  }
+
+  async getBoughtFilmsByCursor(
+    userId: string,
+    cursor: number,
+    limit: number,
+    query: string,
+  ) {
+    const userWithFilms = await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      include: {
+        userBoughtFilm: {
+          where: {
+            film: {
+              OR: [
+                {
+                  title: {
+                    contains: query,
+                    mode: 'insensitive',
+                  },
+                },
+                {
+                  director: {
+                    contains: query,
+                    mode: 'insensitive',
+                  },
+                },
+              ],
+            },
+          },
+          include: {
+            film: true,
+          },
+          skip: limit * (cursor - 1),
+          take: limit,
+        },
+      },
+    });
+
+    const films = userWithFilms?.userBoughtFilm.map(
+      (relation) => relation.film,
+    );
+    return films;
+  }
+
   async getFilmById(id: string) {
     const film = await this.prisma.film.findUnique({
       where: {

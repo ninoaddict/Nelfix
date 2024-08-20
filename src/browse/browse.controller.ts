@@ -7,7 +7,7 @@ export class BrowseController {
   constructor(private readonly browseService: BrowseService) {}
 
   @Get()
-  @Render('index')
+  @Render('home')
   async browse(
     @Req() req: Request,
     @Query('query') query: string,

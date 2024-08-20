@@ -49,7 +49,7 @@ export class AuthService {
     return {
       username: user.username,
       token: jwtService.encode(payload),
-      iat: payload.iat,
+      payload,
     };
   }
 

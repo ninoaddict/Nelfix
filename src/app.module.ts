@@ -15,6 +15,8 @@ import { AuthMiddleware } from './auth/auth.middleware';
 import { BrowseController } from './browse/browse.controller';
 import { WatchModule } from './watch/watch.module';
 import { WatchController } from './watch/watch.controller';
+import { MylistModule } from './mylist/mylist.module';
+import { MylistController } from './mylist/mylist.controller';
 
 @Module({
   imports: [
@@ -24,6 +26,7 @@ import { WatchController } from './watch/watch.controller';
     FilmModule,
     BrowseModule,
     WatchModule,
+    MylistModule,
   ],
   controllers: [AppController],
   providers: [AppService],
@@ -32,7 +35,7 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(AuthMiddleware)
-      .forRoutes(WatchController, BrowseController, {
+      .forRoutes(WatchController, BrowseController, MylistController, {
         path: 'films/:id/buy',
         method: RequestMethod.POST,
       });
