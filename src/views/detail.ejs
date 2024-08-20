@@ -5,8 +5,6 @@
   <meta charset="utf-8" />
   <link rel="stylesheet" href="/stylesheets/style.css">
   <link rel="icon" href="/images/logo.png">
-  <link href="//vjs.zencdn.net/8.3.0/video-js.min.css" rel="stylesheet">
-  <script src="//vjs.zencdn.net/8.3.0/video.min.js"></script>
   <title>
     <%= film.title %>
   </title>
@@ -21,96 +19,172 @@
         <img src="/images/logo.png" class="h-8" alt="Nelfix Logo" />
         <span class="self-center text-2xl font-semibold whitespace-nowrap text-white">Nelfix</span>
       </a>
-      <button data-collapse-toggle="navbar-default" type="button"
-        class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm rounded-lg md:hidden focus:outline-none focus:ring-2 text-gray-400 hover:bg-gray-700 focus:ring-gray-600"
-        aria-controls="navbar-default" aria-expanded="false">
-        <span class="sr-only">Open main menu</span>
-        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
-          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M1 1h15M1 7h15M1 13h15" />
-        </svg>
-      </button>
-      <div class="hidden w-full md:block md:w-auto" id="navbar-default">
-        <ul
-          class="font-medium flex flex-col p-4 md:p-0 mt-4 border rounded-lg md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 bg-slate-800 md:bg-slate-800 border-gray-700">
+      <div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+        <% if (user) { %>
+        <button type="button" class="flex text-sm bg-slate-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-600" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
+          <span class="sr-only">Open user menu</span>
+          <img class="w-8 h-8 p-0.5 rounded-full ring-2 ring-gray-500 hover:bg-slate-400" src="/images/user.png" alt="user photo">
+        </button>
+        <div class="z-50 hidden my-4 text-base list-none divide-y rounded-lg shadow bg-slate-700 divide-gray-600" id="user-dropdown">
+          <div class="px-4 py-3 flex flex-col gap-1">
+            <span class="flex text-sm text-slate-100 items-center gap-1"><i class="fa-solid fa-coins" style="color: #FFD43B;"></i>
+              <p><%= user.balance %></p>
+            </span>
+          </div>
+          <ul class="py-2" aria-labelledby="user-menu-button">
+            <li>
+              <a href="/profile" class="block px-4 py-2 text-sm hover:bg-gray-600 text-gray-200 hover:text-white">Profile</a>
+            </li>
+            <li>
+              <a id="sign-out" class="block px-4 py-2 text-sm hover:bg-gray-600 text-gray-200 hover:text-white">Sign
+                out</a>
+            </li>
+          </ul>
+        </div>
+        <% } else { %>
+        <a href="/auth/login">
+          <button class="relative inline-flex items-center justify-center p-0.5 overflow-hidden text-sm font-medium rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white text-white focus:ring-4 focus:outline-none focus:ring-green-800">
+            <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-gray-900 rounded-md group-hover:bg-opacity-0">
+              Login
+            </span>
+          </button>
+        </a>
+        <% } %>
+        <button data-collapse-toggle="navbar-user" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm rounded-lg md:hidden focus:outline-none focus:ring-2 text-gray-400 hover:bg-gray-700 focus:ring-gray-600" aria-controls="navbar-user" aria-expanded="false">
+          <span class="sr-only">Open main menu</span>
+          <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15" />
+          </svg>
+        </button>
+      </div>
+      <div class="items-center hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
+        <ul class="flex flex-col font-medium p-4 md:p-0 mt-4 border rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 bg-slate-800 border-gray-700">
           <li>
-            <a href="/"
-              class="block py-2 px-3 rounded md:border-0 md:p-0 text-white md:hover:text-slate-500 hover:bg-gray-700 hover:text-white md:hover:bg-transparent">Home</a>
+            <a href="/browse" class="block py-2 px-3 rounded md:border-0 md:p-0 text-white md:hover:text-slate-500 hover:bg-gray-700 hover:text-white md:hover:bg-transparent">Home</a>
           </li>
+          <% if (user) { %>
           <li>
-            <a href="/mylist"
-              class="block py-2 px-3 rounded md:border-0 md:p-0 text-white md:hover:text-slate-500 hover:bg-gray-700 hover:text-white md:hover:bg-transparent">My
+            <a href="/mylist" class="block py-2 px-3 rounded md:border-0 md:p-0 text-white md:hover:text-slate-500 hover:bg-gray-700 hover:text-white md:hover:bg-transparent">My
               List</a>
           </li>
+          <% } %>
           <li>
-            <a href="/profile"
-              class="block py-2 px-3 rounded md:border-0 md:p-0 text-white md:hover:text-slate-500 hover:bg-gray-700 hover:text-white md:hover:bg-transparent">
-              <p class="md:hidden">Profile</p>
-              <img class="w-6 p-0.5 rounded-full ring-2 ring-gray-500 h-6 hover:bg-slate-400 md:block hidden"
-                src="/images/user.png" alt="avatar">
-            </a>
+            <a href="/about" class="block py-2 px-3 rounded md:border-0 md:p-0 text-white md:hover:text-slate-500 hover:bg-gray-700 hover:text-white md:hover:bg-transparent">About</a>
           </li>
         </ul>
       </div>
     </div>
   </nav>
 
-  <main class="container mx-auto p-4 mt-20 min-h-[80vh]">
-    <div class="flex justify-between items-center mb-6">
-      <h1 class="text-4xl font-bold text-white">
-        <%= film.title %>
-      </h1>
-      <button id="play-button"
-        class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-3 rounded-lg shadow-lg transition ease-in-out duration-300">
-        Play Now
-      </button>
-    </div>
+  <% function formatSecond(seconds) { %>
+  <% const hours=Math.floor(seconds / 3600); %>
+  <% const minutes=Math.floor((seconds % 3600) / 60); %>
+  <% const secs=seconds % 60; %>
+  <% const formattedHours=String(hours).padStart(2, '0' ); %>
+  <% const formattedMinutes=String(minutes).padStart(2, '0' ); %>
+  <% const formattedSeconds=String(secs).padStart(2, '0' ); %>
+  <% return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`; %>
+  <% } %>
 
-    <div class="mt-4 video-container" id="video-container">
-      <div class="rounded-lg overflow-hidden shadow-lg">
-        <video id="my-video" class="video-js vjs-fluid" controls preload="auto" controlslist="nodownload"
-          poster="<%= film.cover_image_url %>"
-          data-setup='{ "playbackRates": [0.5, 1, 1.5, 2], "responsive": true, "controlBar": { "skipButtons": { "backward": 5, "forward": 5 } } }'>
-          <source src="<%= film.video_url %>" type="video/mp4" />
-          <p class="vjs-no-js">
-            To view this video please enable JavaScript, and consider upgrading to a
-            web browser that
-            <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+  <% const colorMap = ['bg-indigo-500', 'bg-pink-500', 'bg-green-500', 'bg-blue-500', 'bg-red-500', 'bg-yellow-500'] %>
+
+  <main class="bg-gray-900 text-white min-h-[80vh] py-8 px-4 sm:px-8 mt-20">
+    <div class="max-w-screen-lg mx-auto">
+
+      <div class="flex flex-col md:flex-row md:space-x-8 relative">
+        <div class="mb-6 md:mb-0">
+          <img class="w-full h-auto rounded-lg shadow-lg md:w-72" src="<%= film.cover_image_url %>" alt="Movie Poster">
+        </div>
+
+        <div class="flex-1">
+          <h1 class="text-3xl sm:text-4xl font-bold mb-3"><%= film.title %></h1>
+
+          <div class="flex flex-wrap items-center text-gray-400 mb-2">
+            <span class="mr-4">
+              <i class="fa-regular fa-calendar-days inline-block w-5 h-5 text-gray-400 -mr-0.5"></i>
+              <%= film.release_year %>
+            </span>
+            <span class="mr-4">
+              <i class="fa-regular fa-clock inline-block w-5 h-5 text-gray-400 -mr-0.5"></i>
+              <%= formatSecond(film.duration) %>
+            </span>
+            <span class="mr-4">
+              <i class="fa-solid fa-coins inline-block w-5 h-5 text-gray-400 -mr-0.5"></i>
+              <%= film.price %>
+            </span>
+          </div>
+
+          <div class="text-gray-400 mb-5">Directed by <%= film.director %></div>
+
+          <div class="mb-5 flex flex-wrap">
+            <% for( let index = 0; index < film.genre.length; index++ ) { %>
+            <span class="text-xs text-white px-3 py-1 rounded-full mb-2 mr-2 <%= colorMap[index % 6] %>"><%= film.genre[index] %></span>
+            <% } %>
+          </div>
+
+          <p class="text-gray-300 leading-relaxed mb-5">
+            <%= film.description %>
           </p>
-        </video>
-      </div>
-    </div>
 
-    <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
-      <div>
-        <h2 class="text-2xl font-semibold text-blue-400 mb-4">Details</h2>
-        <p class="mb-2"><strong class="font-semibold text-blue-300">Description:</strong>
-          <%= film.description %>
-        </p>
-        <p class="mb-2"><strong class="font-semibold text-blue-300">Genres:</strong>
-          <%= film.genre.join(', ') %></p>
-        <p class="mb-2"><strong class="font-semibold text-blue-300">Director:</strong> <%= film.director %></p>
-        <p class="mb-2"><strong class="font-semibold text-blue-300">Release Year:</strong> <%= film.release_year %></p>
-        <p class="mb-2"><strong class="font-semibold text-blue-300">Duration:</strong> <%= film.duration %> minutes</p>
+          <div class="flex justify-center items-end">
+            <button id="<%= isBought ? 'play-now' : 'buy-now'%>" class="bg-blue-600 md:w-full hover:bg-blue-700 text-white font-medium px-6 py-3 rounded-lg shadow-lg transition ease-in-out duration-300 mt-5">
+              <%= isBought ? 'Play Now' : 'Buy Now' %>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </main>
 
-  <script>
-    var player = videojs('my-video', {
-      userActions: {
-        hotkeys: function(event) {
-          console.log(event.which);
-          if (event.which === 37) {
-            this.currentTime(this.currentTime() - 5);
+  <% const filmId = film.id%>
+  <% if (isBought) { %>
+    <script>
+      function onPlay(e) {
+        e.preventDefault();
+        const filmId = '<%= filmId %>';
+        const url = '/watch/' + filmId;
+        window.location.assign(url);
+      }
+      document.getElementById('play-now').addEventListener('click', onPlay);
+    </script>
+  <% } else if (user) {%>
+    <script>
+      async function onBuy(e) {
+        e.preventDefault();
+        document.getElementById('buy-now').disabled = true;
+        const filmId = '<%= filmId %>';
+
+        try {
+          const url = '/films/' + filmId + '/buy';
+          const response = await fetch(url, {
+            method: 'POST',
+          });
+
+          document.getElementById('buy-now').disabled = false;
+          if (response.ok) {
+            const data = await response.json();
+            console.log(data);
+            location.reload();
+          } else {
+            // handle error
+            console.log('error');
           }
-          if (event.which === 39) {
-            this.currentTime(this.currentTime() + 5);
-          }
+        } catch (error) {
+          document.getElementById('buy-now').disabled = false;
+          console.log(error);
         }
       }
-    });
-  </script>
+      document.getElementById('buy-now').addEventListener('click', onBuy);
+    </script>
+  <% } else {%>
+    <script>
+      function getLogin(e) {
+        e.preventDefault();
+        window.location.assign('/auth/login');
+      }
+      document.getElementById('buy-now').addEventListener('click', getLogin);
+    </script>
+  <% } %>
 
   <footer class="rounded-lg shadow bg-slate-800 py-5">
     <div class="w-full max-w-screen-xl mx-auto p-4">

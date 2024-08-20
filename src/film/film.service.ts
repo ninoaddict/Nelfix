@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ConflictException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -210,8 +211,27 @@ export class FilmService {
   }
 
   async buyFilm(filmId: string, userId: string) {
-    const film = await this.getFilmById(userId);
+    const film = await this.getFilmById(filmId);
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+    if (user.balance < film.price) {
+      throw new ForbiddenException('Insufficient balance on payment');
+    }
     try {
+      // deduct balance from user
+      await this.prisma.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          balance: user.balance - film.price,
+        },
+      });
+
+      // insert userBoughtFilm
       const data = await this.prisma.userBoughtFilm.create({
         data: {
           filmId,

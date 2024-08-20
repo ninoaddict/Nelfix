@@ -9,11 +9,13 @@ export class BrowseController {
   @Get()
   @Render('index')
   async browse(
+    @Req() req: Request,
     @Query('query') query: string,
     @Query('page') page: number,
     @Query('limit') limit: number,
   ) {
     return await this.browseService.browse(
+      req['user'],
       query ? query : '',
       page ? page : 1,
       limit ? limit : 12,
@@ -23,6 +25,6 @@ export class BrowseController {
   @Get(':id')
   @Render('detail')
   async detail(@Req() req: Request, @Param('id') id: string) {
-    return await this.browseService.detail(req, id);
+    return await this.browseService.detail(req['user'], id);
   }
 }

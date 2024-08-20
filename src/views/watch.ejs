@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="/stylesheets/style.css">
+  <link rel="icon" href="/images/logo.png">
+  <title><%= title %></title>
+  <link href="//vjs.zencdn.net/8.3.0/video-js.min.css" rel="stylesheet">
+  <script src="//vjs.zencdn.net/8.3.0/video.min.js"></script>
+  <script src="https://kit.fontawesome.com/d0a301b89a.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.js"></script>
+</head>
+
+<body class="bg-black text-gray-100 h-screen flex justify-center items-center">
+  <video id="my-video" src="<%= video_url %>" class="video-js vjs-fluid" controls preload="auto" controlslist="nodownload" poster="<%= cover_image_url %>" data-setup='{ "playbackRates": [0.5, 1, 1.5, 2], "responsive": true, "controlBar": { "skipButtons": { "backward": 5, "forward": 5 } } }'>
+    <p class="vjs-no-js">
+      To view this video please enable JavaScript, and consider upgrading to a
+      web browser that
+      <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+    </p>
+  </video>
+
+  <script>
+    var player = videojs('my-video', {
+      userActions: {
+        hotkeys: function(event) {
+          if (event.which === 37) {
+            this.currentTime(this.currentTime() - 5);
+          }
+          if (event.which === 39) {
+            this.currentTime(this.currentTime() + 5);
+          }
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>

@@ -11,7 +11,8 @@ export class AuthMiddleware implements NestMiddleware {
     try {
       const token = getCookie(req.headers.cookie, 'jwt-nelfix');
       if (!token) {
-        return res.redirect('/auth/login');
+        next();
+        return;
       }
       const jwtService = JwtService(process.env.SECRET);
 
@@ -24,15 +25,17 @@ export class AuthMiddleware implements NestMiddleware {
         },
       });
 
-      if (user) {
+      if (user && user.role === 'USER') {
         req['user'] = payload;
         next();
       } else {
         res.clearCookie('jwt-nelfix');
-        return res.redirect('/auth/login');
+        next();
+        return;
       }
     } catch (error) {
-      return res.redirect('/auth/login');
+      next();
+      return;
     }
   }
 }

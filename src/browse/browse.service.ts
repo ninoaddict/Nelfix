@@ -1,12 +1,15 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { Request } from 'express';
 import { FilmService } from 'src/film/film.service';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class BrowseService {
-  constructor(private filmService: FilmService) {}
+  constructor(
+    private filmService: FilmService,
+    private userService: UsersService,
+  ) {}
 
-  async browse(query: string, page: number, limit: number) {
+  async browse(payload, query: string, page: number, limit: number) {
     const data = await this.filmService.getAllFilms(query);
     const numOfData = data.length;
     const maxPage = Math.max(1, Math.ceil(numOfData / limit));
@@ -30,6 +33,19 @@ export class BrowseService {
       lowerPage = Math.max(1, maxPage - 3);
     }
 
+    let user = null;
+    if (payload) {
+      user = await this.userService.findOneById(payload.id);
+    }
+
+    let res = null;
+    if (user) {
+      res = {
+        username: user.username,
+        balance: user.balance,
+      };
+    }
+
     const films = await this.filmService.getFilmsByCursor(page, limit, query);
     return {
       films,
@@ -38,25 +54,37 @@ export class BrowseService {
       upperPage,
       maxPage,
       query,
+      user: res,
     };
   }
 
-  async detail(req: Request, filmId: string) {
+  async detail(payload, filmId: string) {
     let isBought = false;
+    let user = null;
+    let res = null;
     const film = await this.filmService.getFilmById(filmId);
-    if (req['user']) {
+
+    if (payload) {
       const boughtData = await this.filmService.getFilmBought(
         filmId,
-        req['user'].id,
+        payload.id,
       );
       if (boughtData) {
         isBought = true;
       }
+      user = await this.userService.findOneById(payload.id);
+      if (user) {
+        res = {
+          username: user.username,
+          balance: user.balance,
+        };
+      }
     }
-    console.log(isBought);
+
     return {
       isBought,
       film,
+      user: res,
     };
   }
 }

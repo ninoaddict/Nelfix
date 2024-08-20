@@ -7,6 +7,7 @@ import {
   Post,
   Put,
   Query,
+  Req,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
@@ -18,6 +19,7 @@ import { AuthGuard } from 'src/auth/auth.guard';
 import { RolesGuard } from 'src/roles/roles.guard';
 import { Roles } from 'src/roles/roles.decorator';
 import { Role } from '@prisma/client';
+import { Request } from 'express';
 
 @Controller('films')
 export class FilmController {
@@ -121,5 +123,13 @@ export class FilmController {
       message: 'Film deleted successfully',
       data,
     };
+  }
+
+  @Post(':id/buy')
+  @UseGuards(RolesGuard)
+  @Roles(Role.USER)
+  async buyFilm(@Param('id') id: string, @Req() req: Request) {
+    const user = req['user'];
+    return await this.filmService.buyFilm(id, user.id);
   }
 }

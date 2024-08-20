@@ -5,7 +5,7 @@
   <meta charset="utf-8" />
   <link rel="stylesheet" href="/stylesheets/style.css">
   <link rel="icon" href="/images/logo.png">
-  <title>Nelfix | Home</title>
+  <title>Home - Nelfix</title>
   <script src="https://kit.fontawesome.com/d0a301b89a.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.js"></script>
 </head>
@@ -17,29 +17,57 @@
         <img src="/images/logo.png" class="h-8" alt="Nelfix Logo" />
         <span class="self-center text-2xl font-semibold whitespace-nowrap text-white">Nelfix</span>
       </a>
-      <button data-collapse-toggle="navbar-default" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm rounded-lg md:hidden focus:outline-none focus:ring-2 text-gray-400 hover:bg-gray-700 focus:ring-gray-600" aria-controls="navbar-default" aria-expanded="false">
-        <span class="sr-only">Open main menu</span>
-        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
-          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15" />
-        </svg>
-      </button>
-      <div class="hidden w-full md:block md:w-auto" id="navbar-default">
-        <ul class="font-medium flex flex-col p-4 md:p-0 mt-4 border rounded-lg md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 bg-slate-800 md:bg-slate-800 border-gray-700">
+      <div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+        <% if (user) { %>
+        <button type="button" class="flex text-sm bg-slate-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-600" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
+          <span class="sr-only">Open user menu</span>
+          <img class="w-8 h-8 p-0.5 rounded-full ring-2 ring-gray-500 hover:bg-slate-400" src="/images/user.png" alt="user photo">
+        </button>
+        <div class="z-50 hidden my-4 text-base list-none divide-y rounded-lg shadow bg-slate-700 divide-gray-600" id="user-dropdown">
+          <div class="px-4 py-3 flex flex-col gap-1">
+            <span class="flex text-sm text-slate-100 items-center gap-1"><i class="fa-solid fa-coins" style="color: #FFD43B;"></i>
+              <p><%= user.balance %></p>
+            </span>
+          </div>
+          <ul class="py-2" aria-labelledby="user-menu-button">
+            <li>
+              <a href="/profile" class="block px-4 py-2 text-sm hover:bg-gray-600 text-gray-200 hover:text-white">Profile</a>
+            </li>
+            <li>
+              <a id="sign-out" class="block px-4 py-2 text-sm hover:bg-gray-600 text-gray-200 hover:text-white">Sign
+                out</a>
+            </li>
+          </ul>
+        </div>
+        <% } else { %>
+        <a href="/auth/login">
+          <button class="relative inline-flex items-center justify-center p-0.5 overflow-hidden text-sm font-medium rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white text-white focus:ring-4 focus:outline-none focus:ring-green-800">
+            <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-gray-900 rounded-md group-hover:bg-opacity-0">
+              Login
+            </span>
+          </button>
+        </a>
+        <% } %>
+        <button data-collapse-toggle="navbar-user" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm rounded-lg md:hidden focus:outline-none focus:ring-2 text-gray-400 hover:bg-gray-700 focus:ring-gray-600" aria-controls="navbar-user" aria-expanded="false">
+          <span class="sr-only">Open main menu</span>
+          <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15" />
+          </svg>
+        </button>
+      </div>
+      <div class="items-center hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
+        <ul class="flex flex-col font-medium p-4 md:p-0 mt-4 border rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 bg-slate-800 border-gray-700">
           <li>
-            <a href="/" class="block py-2 px-3 rounded md:border-0 md:p-0 text-white md:hover:text-slate-500 hover:bg-gray-700 hover:text-white md:hover:bg-transparent">Home</a>
+            <a href="/browse" class="block py-2 px-3 rounded md:border-0 md:p-0 text-white md:hover:text-slate-500 hover:bg-gray-700 hover:text-white md:hover:bg-transparent">Home</a>
           </li>
+          <% if (user) { %>
           <li>
             <a href="/mylist" class="block py-2 px-3 rounded md:border-0 md:p-0 text-white md:hover:text-slate-500 hover:bg-gray-700 hover:text-white md:hover:bg-transparent">My
               List</a>
           </li>
+          <% } %>
           <li>
-            <a id="sign-out" class="cursor-pointer w-full block py-2 px-3 rounded md:border-0 md:p-0 text-white md:hover:text-slate-500 hover:bg-gray-700 hover:text-white md:hover:bg-transparent">Sign Out</a>
-          </li>
-          <li>
-            <a href="/profile" class="block py-2 px-3 rounded md:border-0 md:p-0 text-white md:hover:text-slate-500 hover:bg-gray-700 hover:text-white md:hover:bg-transparent">
-              <p class="md:hidden">Profile</p>
-              <img class="w-6 p-0.5 rounded-full ring-2 ring-gray-500 h-6 hover:bg-slate-400 md:block hidden" src="/images/user.png" alt="avatar">
-            </a>
+            <a href="/about" class="block py-2 px-3 rounded md:border-0 md:p-0 text-white md:hover:text-slate-500 hover:bg-gray-700 hover:text-white md:hover:bg-transparent">About</a>
           </li>
         </ul>
       </div>
@@ -75,26 +103,26 @@
     <% if (films && films.length> 0) { %>
     <section class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-5 justify-items-center cursor-pointer">
       <% films.forEach(film=> { %>
-        <a href="/browse/<%= film.id %>">
-          <div class="max-w-xs bg-gray-800 text-white rounded-lg shadow-lg overflow-hidden mx-auto w-48 xl:w-52">
-            <img class="object-cover h-[250px] w-full" src="<%= film.cover_image_url %>" alt="Movie Cover">
-            <div class="px-4 py-2">
-              <h3 class="text-center mb-1 text-md text-nowrap overflow-hidden">
-                <%= film.title %>
-              </h3>
-              <div class="flex justify-evenly text-gray-400 text-xs">
-                <p>
-                  <i class="fa-regular fa-clock inline-block w-4 h-4 text-gray-400 -mr-0.5"></i>
-                  <%= formatSecond(film.duration) %>
-                </p>
-                <p>
-                  <i class="fa-regular fa-calendar-days inline-block w-4 h-4 text-gray-400 -mr-0.5"></i>
-                  <%= film.release_year%>
-                </p>
-              </div>
+      <a href="/browse/<%= film.id %>">
+        <div class="max-w-xs bg-gray-800 text-white rounded-lg shadow-lg overflow-hidden mx-auto w-48 xl:w-52">
+          <img class="object-cover h-[250px] w-full" src="<%= film.cover_image_url %>" alt="Movie Cover">
+          <div class="px-4 py-2">
+            <h3 class="text-center mb-1 text-md text-nowrap overflow-hidden">
+              <%= film.title %>
+            </h3>
+            <div class="flex justify-evenly text-gray-400 text-xs">
+              <p>
+                <i class="fa-regular fa-clock inline-block w-4 h-4 text-gray-400 -mr-0.5"></i>
+                <%= formatSecond(film.duration) %>
+              </p>
+              <p>
+                <i class="fa-regular fa-calendar-days inline-block w-4 h-4 text-gray-400 -mr-0.5"></i>
+                <%= film.release_year%>
+              </p>
             </div>
           </div>
-        </a>
+        </div>
+      </a>
       <% }) %>
     </section>
     <% } else { %>
@@ -148,9 +176,9 @@
 
       const query = document.getElementById('default-search').value;
       if (query) {
-        window.location.replace(`/browse?query=${query}`);
+        window.location.assign(`/browse?query=${query}`);
       } else {
-        window.location.replace('/browse');
+        window.location.assign('/browse');
       }
     });
 
