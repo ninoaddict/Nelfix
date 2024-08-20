@@ -91,7 +91,7 @@ export class AuthController {
     });
   }
 
-  @Post('auth/logout')
+  @Post('logout')
   async userLogout(@Res() res: Response) {
     res.clearCookie('jwt-nelfix');
     res.send({

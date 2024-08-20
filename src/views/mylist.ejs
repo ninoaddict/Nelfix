@@ -189,6 +189,7 @@
   <% if (user) { %>
   <script>
     document.getElementById('sign-out').addEventListener('click', async (e) => {
+      e.preventDefault();
       console.log('click');
       await fetch('/auth/logout', {
         method: 'POST',

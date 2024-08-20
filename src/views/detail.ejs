@@ -138,65 +138,66 @@
 
   <% const filmId = film.id%>
   <% if (isBought) { %>
-    <script>
-      function onPlay(e) {
-        e.preventDefault();
-        const filmId = '<%= filmId %>';
-        const url = '/watch/' + filmId;
-        window.location.assign(url);
-      }
-      document.getElementById('play-now').addEventListener('click', onPlay);
-    </script>
+  <script>
+    function onPlay(e) {
+      e.preventDefault();
+      const filmId = '<%= filmId %>';
+      const url = '/watch/' + filmId;
+      window.location.assign(url);
+    }
+    document.getElementById('play-now').addEventListener('click', onPlay);
+  </script>
   <% } else if (user) {%>
-    <script>
-      async function onBuy(e) {
-        e.preventDefault();
-        document.getElementById('buy-now').disabled = true;
-        const filmId = '<%= filmId %>';
+  <script>
+    async function onBuy(e) {
+      e.preventDefault();
+      document.getElementById('buy-now').disabled = true;
+      const filmId = '<%= filmId %>';
 
-        try {
-          const url = '/films/' + filmId + '/buy';
-          const response = await fetch(url, {
-            method: 'POST',
-          });
+      try {
+        const url = '/films/' + filmId + '/buy';
+        const response = await fetch(url, {
+          method: 'POST',
+        });
 
-          document.getElementById('buy-now').disabled = false;
-          if (response.ok) {
-            const data = await response.json();
-            console.log(data);
-            location.reload();
-          } else {
-            // handle error
-            console.log('error');
-          }
-        } catch (error) {
-          document.getElementById('buy-now').disabled = false;
-          console.log(error);
+        document.getElementById('buy-now').disabled = false;
+        if (response.ok) {
+          const data = await response.json();
+          console.log(data);
+          location.reload();
+        } else {
+          // handle error
+          console.log('error');
         }
+      } catch (error) {
+        document.getElementById('buy-now').disabled = false;
+        console.log(error);
       }
-      document.getElementById('buy-now').addEventListener('click', onBuy);
-    </script>
+    }
+    document.getElementById('buy-now').addEventListener('click', onBuy);
+  </script>
   <% } else {%>
-    <script>
-      function getLogin(e) {
-        e.preventDefault();
-        window.location.assign('/auth/login');
-      }
-      document.getElementById('buy-now').addEventListener('click', getLogin);
-    </script>
+  <script>
+    function getLogin(e) {
+      e.preventDefault();
+      window.location.assign('/auth/login');
+    }
+    document.getElementById('buy-now').addEventListener('click', getLogin);
+  </script>
   <% } %>
 
   <% if (user) { %>
-    <script>
-      document.getElementById('sign-out').addEventListener('click', async (e) => {
-        console.log('click');
-        await fetch('/auth/logout', {
-          method: 'POST',
-        });
-        location.reload();
-      })
-    </script>
-    <% } %>
+  <script>
+    document.getElementById('sign-out').addEventListener('click', async (e) => {
+      e.preventDefault();
+      console.log('click');
+      await fetch('/auth/logout', {
+        method: 'POST',
+      });
+      location.reload();
+    })
+  </script>
+  <% } %>
 
   <footer class="rounded-lg shadow bg-slate-800 py-5">
     <div class="w-full max-w-screen-xl mx-auto p-4">

@@ -69,7 +69,6 @@ export class FilmService {
         cover_image_url,
       },
     });
-    console.log(new_film);
     return new_film;
   }
 
@@ -360,8 +359,7 @@ export class FilmService {
   }
 
   async deleteFile(name: string) {
-    const data = await this.deleteS3Bucket(process.env.AWS_S3_BUCKET, name);
-    console.log(data);
+    await this.deleteS3Bucket(process.env.AWS_S3_BUCKET, name);
   }
 
   async deleteS3Bucket(bucket: string, name: string) {

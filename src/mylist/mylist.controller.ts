@@ -26,7 +26,6 @@ export class MylistController {
       page ? page : 1,
       limit ? limit : 12,
     );
-    console.log(data);
     res.render('mylist', data);
   }
 }
