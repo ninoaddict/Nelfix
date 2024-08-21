@@ -134,6 +134,12 @@
       }
     }
     document.getElementById('form').addEventListener('submit', onSubmit);
+
+    window.onpageshow = function(event) {
+      if (event.persisted) {
+        window.location.reload();
+      }
+    };
   </script>
 
   <footer class="rounded-lg shadow bg-slate-800 py-5">

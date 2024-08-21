@@ -19,7 +19,6 @@ export class UserValidationPipe implements PipeTransform<any> {
     if (errors.length > 0) {
       throw new BadRequestException('Validation failed');
     }
-    console.log(value);
     return value;
   }
 
@@ -33,7 +32,6 @@ export class ZodValidationPipe implements PipeTransform {
   constructor(private schema: ZodSchema) {}
 
   transform(value) {
-    console.log(value);
     try {
       const parsedValue = this.schema.parse(value);
       return parsedValue;

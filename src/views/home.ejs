@@ -65,6 +65,9 @@
             <a href="/mylist" class="block py-2 px-3 rounded md:border-0 md:p-0 text-white md:hover:text-slate-500 hover:bg-gray-700 hover:text-white md:hover:bg-transparent">My
               List</a>
           </li>
+          <li>
+            <a href="/wishlist" class="block py-2 px-3 rounded md:border-0 md:p-0 text-white md:hover:text-slate-500 hover:bg-gray-700 hover:text-white md:hover:bg-transparent">Wish List</a>
+          </li>
           <% } %>
           <li>
             <a href="/about" class="block py-2 px-3 rounded md:border-0 md:p-0 text-white md:hover:text-slate-500 hover:bg-gray-700 hover:text-white md:hover:bg-transparent">About</a>
@@ -181,13 +184,18 @@
         window.location.assign('/browse');
       }
     });
+
+    window.onpageshow = function(event) {
+      if (event.persisted) {
+        window.location.reload();
+      }
+    };
   </script>
 
   <% if (user) { %>
   <script>
     document.getElementById('sign-out').addEventListener('click', async (e) => {
       e.preventDefault();
-      console.log('click');
       await fetch('/auth/logout', {
         method: 'POST',
       });

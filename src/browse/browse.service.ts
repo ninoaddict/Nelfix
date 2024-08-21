@@ -61,6 +61,7 @@ export class BrowseService {
 
   async detail(payload, filmId: string) {
     let isBought = false;
+    let isWishList = false;
     let user = null;
     let res = null;
     const film = await this.filmService.getFilmById(filmId);
@@ -73,6 +74,15 @@ export class BrowseService {
       if (boughtData) {
         isBought = true;
       }
+
+      const wishListData = await this.filmService.getFilmInWishList(
+        payload.id,
+        filmId,
+      );
+      if (wishListData) {
+        isWishList = true;
+      }
+
       user = await this.userService.findOneById(payload.id);
       if (user) {
         res = {
@@ -85,6 +95,7 @@ export class BrowseService {
 
     return {
       isBought,
+      isWishList,
       film,
       user: res,
     };

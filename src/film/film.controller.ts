@@ -125,11 +125,27 @@ export class FilmController {
     };
   }
 
-  @Post(':id/buy')
+  @Post('buy/:id')
   @UseGuards(RolesGuard)
   @Roles(Role.USER)
   async buyFilm(@Param('id') id: string, @Req() req: Request) {
     const user = req['user'];
     return await this.filmService.buyFilm(id, user.id);
+  }
+
+  @Post('wishlist/:id')
+  @UseGuards(RolesGuard)
+  @Roles(Role.USER)
+  async addToWishList(@Param('id') id: string, @Req() req: Request) {
+    const user = req['user'];
+    return await this.filmService.createWishList(user.id, id);
+  }
+
+  @Delete('wishlist/:id')
+  @UseGuards(RolesGuard)
+  @Roles(Role.USER)
+  async removeFromWishList(@Param('id') id: string, @Req() req: Request) {
+    const user = req['user'];
+    return await this.filmService.removeWishList(user.id, id);
   }
 }

@@ -187,6 +187,135 @@ export class FilmService {
     return res;
   }
 
+  async createWishList(userId: string, filmId: string) {
+    try {
+      const data = await this.prisma.wishList.create({
+        data: {
+          filmId,
+          userId,
+        },
+      });
+
+      return {
+        message: 'Film added successfully',
+        status: 'success',
+        data,
+      };
+    } catch (error) {
+      throw new ConflictException('Film has been added to wishlist before');
+    }
+  }
+
+  async removeWishList(userId: string, filmId: string) {
+    try {
+      const data = await this.prisma.wishList.delete({
+        where: {
+          userId_filmId: {
+            userId,
+            filmId,
+          },
+        },
+      });
+      return {
+        message: 'Film removed successfully',
+        status: 'success',
+        data,
+      };
+    } catch (error) {
+      throw new ConflictException('Film has never been added to wishlist');
+    }
+  }
+
+  async getFilmInWishList(userId: string, filmId: string) {
+    return await this.prisma.wishList.findUnique({
+      where: {
+        userId_filmId: {
+          userId,
+          filmId,
+        },
+      },
+    });
+  }
+
+  async getWishList(userId: string, query: string) {
+    const userWithFilms = await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      include: {
+        wishList: {
+          where: {
+            film: {
+              OR: [
+                {
+                  title: {
+                    contains: query,
+                    mode: 'insensitive',
+                  },
+                },
+                {
+                  director: {
+                    contains: query,
+                    mode: 'insensitive',
+                  },
+                },
+              ],
+            },
+          },
+          include: {
+            film: true,
+          },
+        },
+      },
+    });
+
+    const films = userWithFilms?.wishList.map((relation) => relation.film);
+    return films;
+  }
+
+  async getWishListByCursor(
+    userId: string,
+    cursor: number,
+    limit: number,
+    query: string,
+  ) {
+    const userWithFilms = await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      include: {
+        wishList: {
+          where: {
+            film: {
+              OR: [
+                {
+                  title: {
+                    contains: query,
+                    mode: 'insensitive',
+                  },
+                },
+                {
+                  director: {
+                    contains: query,
+                    mode: 'insensitive',
+                  },
+                },
+              ],
+            },
+          },
+          include: {
+            film: true,
+          },
+          skip: limit * (cursor - 1),
+          take: limit,
+        },
+      },
+    });
+
+    const films = userWithFilms?.wishList.map((relation) => relation.film);
+    return films;
+  }
+
   async getBoughtFilms(userId: string, query: string) {
     const userWithFilms = await this.prisma.user.findUnique({
       where: {
@@ -270,6 +399,15 @@ export class FilmService {
     return films;
   }
 
+  async getFilmBought(filmId: string, userId: string) {
+    return await this.prisma.userBoughtFilm.findFirst({
+      where: {
+        filmId,
+        userId,
+      },
+    });
+  }
+
   async getFilmById(id: string) {
     const film = await this.prisma.film.findUnique({
       where: {
@@ -281,15 +419,6 @@ export class FilmService {
     } else {
       throw new NotFoundException('Film not found');
     }
-  }
-
-  async getFilmBought(filmId: string, userId: string) {
-    return await this.prisma.userBoughtFilm.findFirst({
-      where: {
-        filmId,
-        userId,
-      },
-    });
   }
 
   async buyFilm(filmId: string, userId: string) {

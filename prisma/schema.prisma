@@ -39,6 +39,7 @@ model User {
     updatedAt      DateTime         @updatedAt
     Profile        Profile?
     userBoughtFilm UserBoughtFilm[]
+    wishList       WishList[]
 }
 
 model UserBoughtFilm {
@@ -48,6 +49,15 @@ model UserBoughtFilm {
     price    Int
     user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
     film     Film     @relation(fields: [filmId], references: [id], onDelete: Cascade)
+
+    @@id([userId, filmId])
+}
+
+model WishList {
+    userId String
+    filmId String
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    film   Film   @relation(fields: [filmId], references: [id], onDelete: Cascade)
 
     @@id([userId, filmId])
 }
@@ -63,9 +73,10 @@ model Film {
     duration        Int
     video_url       String
     cover_image_url String
-    created_at       DateTime         @default(now())
-    updated_at       DateTime         @updatedAt
+    created_at      DateTime         @default(now())
+    updated_at      DateTime         @updatedAt
     userBoughtFilm  UserBoughtFilm[]
+    wishList        WishList[]
 
     @@unique([title, director, release_year])
 }
