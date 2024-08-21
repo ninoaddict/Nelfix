@@ -19,6 +19,7 @@ import { MylistModule } from './mylist/mylist.module';
 import { MylistController } from './mylist/mylist.controller';
 import { WishlistModule } from './wishlist/wishlist.module';
 import { WishlistController } from './wishlist/wishlist.controller';
+import { ReviewModule } from './review/review.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { WishlistController } from './wishlist/wishlist.controller';
     WatchModule,
     MylistModule,
     WishlistModule,
+    ReviewModule,
   ],
   controllers: [AppController],
   providers: [AppService],

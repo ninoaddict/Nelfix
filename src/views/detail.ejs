@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Browse page for Nelfix">
   <link rel="stylesheet" href="/stylesheets/style.css">
   <link rel="icon" href="/images/logo.png">
   <title>
     <%= film.title %>
   </title>
   <script src="https://kit.fontawesome.com/d0a301b89a.js" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.js"></script>
 </head>
 
 <body class="bg-slate-900 text-gray-100">
@@ -31,12 +31,6 @@
         </button>
         <div class="z-50 hidden my-4 text-base list-none divide-y rounded-lg shadow bg-slate-700 divide-gray-600" id="user-dropdown">
           <div class="px-4 py-3 flex flex-col gap-1">
-            <!-- <span class="flex text-sm text-slate-100 items-center gap-1"></i>
-                <p><%= user.email %></p>
-            </span>
-            <span class="flex text-sm text-slate-100 items-center gap-1"><i class="fa-solid fa-coins" style="color: #FFD43B;"></i>
-              <p><%= user.balance %></p>
-            </span> -->
             <span class="block text-sm text-gray-900 dark:text-white"><%= user.username %></span>
             <span class="block text-sm  text-gray-500 truncate dark:text-gray-400"><%= user.email %></span>
           </div>
@@ -101,8 +95,8 @@
     <div class="max-w-screen-lg mx-auto">
 
       <div class="flex flex-col md:flex-row md:space-x-8 relative">
-        <div class="mb-6 md:mb-0">
-          <img class="w-full h-auto rounded-lg shadow-lg md:w-72" src="<%= film.cover_image_url %>" alt="Movie Poster">
+        <div class="mb-6 md:mb-0 flex justify-center items-center">
+          <img class="h-[500px] md:h-auto rounded-lg shadow-lg md:w-72" src="<%= film.cover_image_url %>" alt="Movie Poster">
         </div>
 
         <div class="flex-1">
@@ -127,7 +121,7 @@
 
           <div class="mb-5 flex flex-wrap">
             <% for( let index = 0; index < film.genre.length; index++ ) { %>
-            <span class="text-xs text-white px-3 py-1 rounded-full mb-2 mr-2 <%= colorMap[index % 6] %>"><%= film.genre[index] %></span>
+            <span class="text-xs text-slate-950 px-3 py-1 rounded-full mb-2 mr-2 <%= colorMap[index % 6] %>"><%= film.genre[index] %></span>
             <% } %>
           </div>
 
@@ -137,13 +131,13 @@
 
           <div class="flex justify-center gap-2">
             <% if (isBought) { %>
-            <button id="play-now" class="bg-blue-600 md:w-full hover:bg-blue-700 text-white font-medium px-6 py-3 rounded-lg shadow-lg transition ease-in-out duration-300 md:mt-5">Play Now</button>
+            <button id="play-now" class="bg-blue-500 md:w-full hover:bg-blue-600 text-slate-950 font-medium px-6 py-3 rounded-lg shadow-lg transition ease-in-out duration-300 md:mt-5">Play Now</button>
             <% } else if (user){%>
-            <button data-modal-target="popup-modal" data-modal-toggle="popup-modal" class="bg-blue-600 md:w-full hover:bg-blue-700 text-white font-medium px-6 py-3 rounded-lg shadow-lg transition ease-in-out duration-300 md:mt-5">Buy Now</button>
+            <button data-modal-target="popup-modal" data-modal-toggle="popup-modal" class="bg-blue-500 md:w-full hover:bg-blue-600 text-slate-950 font-medium px-6 py-3 rounded-lg shadow-lg transition ease-in-out duration-300 md:mt-5">Buy Now</button>
             <% } else { %>
-            <button id="buy-now" class="bg-blue-600 md:w-full hover:bg-blue-700 text-white font-medium px-6 py-3 rounded-lg shadow-lg transition ease-in-out duration-300 md:mt-5">Buy Now</button>
+            <button id="buy-now" class="bg-blue-500 md:w-full hover:bg-blue-600 text-slate-950 font-medium px-6 py-3 rounded-lg shadow-lg transition ease-in-out duration-300 md:mt-5">Buy Now</button>
             <% } %>
-            <button id="wishlist" class="bg-yellow-500 md:w-full hover:bg-yellow-600 text-white font-medium px-6 py-3 rounded-lg shadow-lg flex justify-center items-center transition ease-in-out duration-300 md:mt-5 <%= isWishList ? 'remove-wishlist' : 'add-wishlist' %>"><%= isWishList ? 'Remove from Wishlist' : 'Add to Wishlist' %></button>
+            <button id="wishlist" class="bg-yellow-500 md:w-full hover:bg-yellow-600 text-slate-950 font-medium px-6 py-3 rounded-lg shadow-lg flex justify-center items-center transition ease-in-out duration-300 md:mt-5 <%= isWishList ? 'remove-wishlist' : 'add-wishlist' %>"><%= isWishList ? 'Remove from Wishlist' : 'Add to Wishlist' %></button>
           </div>
         </div>
       </div>
@@ -344,6 +338,7 @@
     </div>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.js"></script>
 </body>
 
 </html>
