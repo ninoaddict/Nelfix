@@ -20,6 +20,7 @@ import { MylistController } from './mylist/mylist.controller';
 import { WishlistModule } from './wishlist/wishlist.module';
 import { WishlistController } from './wishlist/wishlist.controller';
 import { ReviewModule } from './review/review.module';
+import { ReviewController } from './review/review.controller';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ export class AppModule implements NestModule {
       BrowseController,
       MylistController,
       WishlistController,
+      ReviewController,
       {
         path: 'films/buy/:id',
         method: RequestMethod.POST,

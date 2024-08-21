@@ -19,8 +19,7 @@ export class WishlistService {
     page: number,
     limit: number,
   ) {
-    const data = await this.filmService.getWishList(userId, query);
-    const numOfData = data.length;
+    const numOfData = await this.filmService.getWishListNumber(userId, query);
     const maxPage = Math.max(1, Math.ceil(numOfData / limit));
 
     if (page > maxPage || page < 1) {

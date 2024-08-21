@@ -116,11 +116,12 @@
           method: 'POST',
           body: formData,
         });
+        
+        const data = await response.json();
 
         document.getElementById('submit-button').innerHTML = "Submit";
         document.getElementById('submit-button').disabled = false;
 
-        const data = await response.json();
         if (response.ok) {
           window.location.replace('/');
         } else {

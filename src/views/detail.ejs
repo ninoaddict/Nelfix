@@ -5,6 +5,7 @@
   <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Browse page for Nelfix">
   <link rel="stylesheet" href="/stylesheets/style.css">
+  <link rel="stylesheet" href="/stylesheets/style2.css">
   <link rel="icon" href="/images/logo.png">
   <title>
     <%= film.title %>
@@ -16,7 +17,7 @@
   <nav class="border-gray-600 bg-slate-800 fixed w-full z-20 top-0 start-0">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
       <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
-        <img src="/images/logo.png" class="h-8" alt="Nelfix Logo" />
+        <img src="/images/logo.png" class="h-8 w-8" alt="Nelfix Logo" />
         <span class="self-center text-2xl font-semibold whitespace-nowrap text-white">Nelfix</span>
       </a>
       <div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
@@ -94,13 +95,20 @@
   <main class="bg-gray-900 text-white min-h-[82vh] py-8 px-4 sm:px-8 mt-20">
     <div class="max-w-screen-lg mx-auto">
 
-      <div class="flex flex-col md:flex-row md:space-x-8 relative">
+      <div class="flex flex-col md:flex-row md:space-x-8">
         <div class="mb-6 md:mb-0 flex justify-center items-center">
-          <img class="h-[500px] md:h-auto rounded-lg shadow-lg md:w-72" src="<%= film.cover_image_url %>" alt="Movie Poster">
+          <img class="h-auto rounded-lg shadow-lg md:w-72 w-full" src="<%= film.cover_image_url %>" alt="Movie Poster">
         </div>
 
         <div class="flex-1">
           <h1 class="text-3xl sm:text-4xl font-bold mb-3"><%= film.title %></h1>
+
+          <div class="flex mb-3 items-center text-gray-400 -ml-[2px]">
+            <svg class="w-5 h-5 text-yellow-300 mr-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+              <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+            </svg>
+            <p><%= film.rating %> out of 5</p>
+          </div>
 
           <div class="flex flex-wrap items-center text-gray-400 mb-2">
             <span class="mr-4">
@@ -132,17 +140,107 @@
           <div class="flex justify-center gap-2">
             <% if (isBought) { %>
             <button id="play-now" class="bg-blue-500 md:w-full hover:bg-blue-600 text-slate-950 font-medium px-6 py-3 rounded-lg shadow-lg transition ease-in-out duration-300 md:mt-5">Play Now</button>
-            <% } else if (user){%>
+            <% } else if (user) { %>
             <button data-modal-target="popup-modal" data-modal-toggle="popup-modal" class="bg-blue-500 md:w-full hover:bg-blue-600 text-slate-950 font-medium px-6 py-3 rounded-lg shadow-lg transition ease-in-out duration-300 md:mt-5">Buy Now</button>
             <% } else { %>
             <button id="buy-now" class="bg-blue-500 md:w-full hover:bg-blue-600 text-slate-950 font-medium px-6 py-3 rounded-lg shadow-lg transition ease-in-out duration-300 md:mt-5">Buy Now</button>
             <% } %>
-            <button id="wishlist" class="bg-yellow-500 md:w-full hover:bg-yellow-600 text-slate-950 font-medium px-6 py-3 rounded-lg shadow-lg flex justify-center items-center transition ease-in-out duration-300 md:mt-5 <%= isWishList ? 'remove-wishlist' : 'add-wishlist' %>"><%= isWishList ? 'Remove from Wishlist' : 'Add to Wishlist' %></button>
+            <button id="wishlist" class="bg-yellow-500 md:w-full hover:bg-yellow-600 text-slate-950 font-medium px-6 py-3 rounded-lg shadow-lg flex justify-center items-center transition ease-in-out duration-300 md:mt-5"><%= isWishList ? 'Remove from Wishlist' : 'Add to Wishlist' %></button>
           </div>
         </div>
       </div>
+
+      <% function formatDateTime(str) {
+        const date = new Date(str)
+        const localeFormat = date.toLocaleString('en-GB', {year: 'numeric',month: 'short',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: false,
+          timeZoneName: 'short'
+        });
+        return localeFormat;
+      } %>
+
+      <div class="mt-12">
+        <h2 class="text-2xl font-bold mb-4">User Reviews</h2>
+        <div class="space-y-6">
+          <% if (reviews && reviews.length > 0) { %>
+          <% reviews.forEach(function(review) { %>
+          <div class="bg-gray-800 p-4 rounded-lg shadow">
+            <div class="flex justify-between items-center mb-2">
+              <div>
+                <p class="text-sm text-gray-400"><%= review.user.username %> <span class="ml-1 mr-1">-</span> <%= formatDateTime(review.updatedAt) %></p>
+                <div class="text-yellow-400">
+                  <% for (let i = 0; i < 5; i++) { %>
+                  <i class="fa-solid fa-star <%= i < review.rating ? '' : 'text-gray-500' %>"></i>
+                  <% } %>
+                </div>
+              </div>
+              <% if (isBought && review.userId === user.id) { %>
+              <button data-modal-target="review-modal" data-modal-toggle="review-modal" class="text-blue-400 text-sm font-medium">Edit Review</button>
+              <% } %>
+            </div>
+            <p class="text-gray-300"><%= review.content %></p>
+          </div>
+          <% }); %>
+          <% } else { %>
+          <p class="text-gray-400">No reviews yet. Be the first to review this movie!</p>
+          <% } %>
+        </div>
+        <% if (isBought && !currReview) { %>
+        <div class="mt-6">
+          <button data-modal-target="review-modal" data-modal-toggle="review-modal" class="bg-blue-500 hover:bg-blue-600 text-slate-950 font-medium px-6 py-3 rounded-lg shadow-lg transition ease-in-out duration-300">Add Your Review</button>
+        </div>
+        <% } %>
+      </div>
     </div>
   </main>
+
+  <% const filmId = film.id %>
+  <% const hasReviewed = currReview ? 1 : 0 %>
+  <% const inWishList = isWishList ? 1 : 0 %>
+
+  <% if (isBought) { %>
+  <div id="review-modal" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-[25%] md:top-0 right-0 left-0 z-50 w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-md h-full md:h-auto">
+      <div class="relative bg-gray-700 rounded-lg shadow-lg">
+        <div class="flex justify-between items-center p-4 border-b border-gray-600">
+          <h3 class="text-xl font-semibold text-white">
+            <%= currReview ? 'Edit Your Review' : 'Add Your Review' %>
+          </h3>
+          <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-600 hover:text-white rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-hide="review-modal">
+            <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 011.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+            </svg>
+            <span class="sr-only">Close modal</span>
+          </button>
+        </div>
+        <div class="p-6">
+          <form id="review">
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-white">Rating</label>
+              <div id="rating" class="rate">
+                <% for (let i = 5; i > 0; i--) { %>
+                <input type="radio" id="star-<%= i %>" name="rating" value="<%= i %>" <%= currReview && currReview.rating == i ? 'checked' : ''%>>
+                <label for="star-<%= i %>" class="cursor-pointer"></label>
+                <% } %>
+              </div>
+            </div>
+            <div class="mb-4">
+              <label for="comment" class="block text-sm font-medium text-white">Comment</label>
+              <textarea id="comment" name="content" rows="4" class="block p-2.5 w-full text-sm text-gray-300 bg-gray-800 rounded-lg border border-gray-600 focus:ring-blue-500 focus:border-blue-500" placeholder="Write your review..." required><%= (currReview && currReview.content) || '' %></textarea>
+            </div>
+            <button id="submit-review" class="w-full bg-blue-500 hover:bg-blue-600 text-slate-950 font-medium px-6 py-3 rounded-lg shadow-lg transition ease-in-out duration-300">
+              <%= currReview ? 'Update Review' : 'Submit Review' %>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% } %>
 
   <% if (user && !isBought) { %>
   <div id="popup-modal" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
@@ -189,7 +287,6 @@
   </div>
   <% } %>
 
-  <% const filmId = film.id%>
   <% if (isBought) { %>
   <script>
     function onPlay(e) {
@@ -199,6 +296,39 @@
       window.location.assign(url);
     }
     document.getElementById('play-now').addEventListener('click', onPlay);
+
+    async function onSubmitReview(e) {
+      e.preventDefault();
+
+      document.getElementById('submit-review').disabled = true;
+
+      const filmId = '<%= filmId %>';
+      const hasReviewed = parseInt('<%= hasReviewed %>');
+
+      const body = new FormData(document.getElementById('review'));
+      try {
+        const url = '/review/' + filmId;
+        const method = hasReviewed ? 'PUT' : 'POST';
+
+        const response = await fetch(url, {
+          method,
+          body,
+        });
+
+        const data = await response.json();
+
+        document.getElementById('submit-review').disabled = false;
+        if (response.ok) {
+          location.reload();
+        } else {
+          console.log(data);
+        }
+      } catch (error) {
+        document.getElementById('submit-review').disabled = false;
+        console.log(error);
+      }
+    }
+    document.getElementById('submit-review').addEventListener('click', onSubmitReview);
   </script>
   <% } else if (user) {%>
   <script>
@@ -232,7 +362,7 @@
   <script>
     function getLogin(e) {
       e.preventDefault();
-      window.location.replace('/auth/login');
+      window.location.assign('/auth/login');
     }
     document.getElementById('buy-now').addEventListener('click', getLogin);
   </script>
@@ -248,76 +378,43 @@
       location.reload();
     })
 
-    const addWishList = document.querySelector('.add-wishlist');
-    const removeWishList = document.querySelector('.remove-wishlist');
+    let isWishList = parseInt('<%= inWishList %>');
+    const wishList = document.getElementById('wishlist');
 
-    if (addWishList) {
-      addWishList.addEventListener('click', async (e) => {
-        e.preventDefault();
-        addWishList.disabled = true;
-        addWishList.innerHTML = '<div role="status"><svg aria-hidden="true" class="w-5 h-5 animate-spin text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/><path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/></svg><span class="sr-only">Loading...</span></div>';
+    wishList.addEventListener('click', async (e) => {
+      e.preventDefault();
+      wishList.disabled = true;
+      wishList.innerHTML = '<div role="status"><svg aria-hidden="true" class="w-5 h-5 animate-spin text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/><path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/></svg><span class="sr-only">Loading...</span></div>';
 
-        const filmId = '<%= filmId %>';
+      const filmId = '<%= filmId %>';
+      const method = isWishList ? 'DELETE' : 'POST';
 
-        try {
-          const url = '/films/wishlist/' + filmId;
-          const response = await fetch(url, {
-            method: 'POST',
-          });
+      try {
+        const url = '/films/wishlist/' + filmId;
+        const response = await fetch(url, {
+          method,
+        });
 
-          const data = await response.json();
-          addWishList.disabled = false;
+        const data = await response.json();
+        wishList.disabled = false;
 
-          if (response.ok) {
-            addWishList.innerHTML = "Remove from Wishlist";
-            addWishList.classList.add('remove-wishlist');
-            addWishList.classList.remove('add-wishlist');
-          } else {
-            addWishList.innerHTML = "Add to Wishlist";
-          }
-        } catch (error) {
-          addWishList.disabled = false;
-          addWishList.innerHTML = "Add to Wishlist";
+        if (response.ok) {
+          wishList.innerHTML = isWishList ? 'Add to Wishlist' : 'Remove from Wishlist';
+          isWishList = !isWishList;
+        } else {
+          wishList.innerHTML = isWishList ? 'Remove from Wishlist' : 'Add to Wishlist';
         }
-      });
-    }
-
-    if (removeWishList) {
-      removeWishList.addEventListener('click', async (e) => {
-        e.preventDefault();
-        removeWishList.disabled = true;
-        removeWishList.innerHTML = '<div role="status"><svg aria-hidden="true" class="w-5 h-5 animate-spin text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/><path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/></svg><span class="sr-only">Loading...</span></div>';
-
-        const filmId = '<%= filmId %>';
-
-        try {
-          const url = '/films/wishlist/' + filmId;
-          const response = await fetch(url, {
-            method: 'DELETE',
-          });
-
-          const data = await response.json();
-          removeWishList.disabled = false;
-
-          if (response.ok) {
-            removeWishList.innerHTML = "Add to Wishlist";
-            removeWishList.classList.add('add-wishlist');
-            removeWishList.classList.remove('remove-wishlist');
-          } else {
-            removeWishList.innerHTML = "Remove from Wishlist";
-          }
-        } catch (error) {
-          removeWishList.disabled = false;
-          removeWishList.innerHTML = "Remove from Wishlist";
-        }
-      });
-    }
+      } catch (error) {
+        wishList.disabled = false;
+        wishList.innerHTML = isWishList ? 'Remove from Wishlist' : 'Add to Wishlist';
+      }
+    });
   </script>
   <% } else { %>
   <script>
     function getLogin(e) {
       e.preventDefault();
-      window.location.replace('/auth/login');
+      window.location.assign('/auth/login');
     }
     document.getElementById('wishlist').addEventListener('click', getLogin);
   </script>

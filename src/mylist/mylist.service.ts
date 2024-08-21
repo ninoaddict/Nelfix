@@ -14,8 +14,10 @@ export class MylistService {
   ) {}
 
   async getMyList(userId: string, query: string, page: number, limit: number) {
-    const data = await this.filmService.getBoughtFilms(userId, query);
-    const numOfData = data.length;
+    const numOfData = await this.filmService.getBoughtFilmsNumber(
+      userId,
+      query,
+    );
     const maxPage = Math.max(1, Math.ceil(numOfData / limit));
 
     if (page > maxPage || page < 1) {

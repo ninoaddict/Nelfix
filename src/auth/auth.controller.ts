@@ -12,7 +12,6 @@ import {
 import { AuthService } from './auth.service';
 import { CreateUserDto, LoginDto } from 'src/dto/user.dto';
 import { NoFilesInterceptor } from '@nestjs/platform-express';
-import { UserValidationPipe } from 'src/users/validation.pipe';
 import { Request, Response } from 'express';
 
 @Controller('auth')
@@ -26,10 +25,7 @@ export class AuthController {
 
   @Post('login')
   @UseInterceptors(NoFilesInterceptor())
-  async userSignIn(
-    @Body(new UserValidationPipe()) signInDto: LoginDto,
-    @Res() res: Response,
-  ) {
+  async userSignIn(@Body() signInDto: LoginDto, @Res() res: Response) {
     const data = await this.authService.signIn(
       signInDto.username,
       signInDto.password,
@@ -61,10 +57,7 @@ export class AuthController {
 
   @Post('register')
   @UseInterceptors(NoFilesInterceptor())
-  async userRegister(
-    @Body(new UserValidationPipe()) registerDto: CreateUserDto,
-    @Res() res: Response,
-  ) {
+  async userRegister(@Body() registerDto: CreateUserDto, @Res() res: Response) {
     const user = await this.authService.register(registerDto);
     if (!user) {
       throw new ConflictException('Email or username already exists');

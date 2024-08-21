@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { FilmService } from 'src/film/film.service';
+import { ReviewService } from 'src/review/review.service';
 import { UsersService } from 'src/users/users.service';
 
 @Injectable()
@@ -7,11 +8,11 @@ export class BrowseService {
   constructor(
     private filmService: FilmService,
     private userService: UsersService,
+    private reviewService: ReviewService,
   ) {}
 
   async browse(payload, query: string, page: number, limit: number) {
-    const data = await this.filmService.getAllFilms(query);
-    const numOfData = data.length;
+    const numOfData = await this.filmService.getAllFilmsNumber(query);
     const maxPage = Math.max(1, Math.ceil(numOfData / limit));
 
     if (page > maxPage || page < 1) {
@@ -64,7 +65,9 @@ export class BrowseService {
     let isWishList = false;
     let user = null;
     let res = null;
+    let currReview = null;
     const film = await this.filmService.getFilmById(filmId);
+    const reviews = await this.reviewService.getReview(filmId);
 
     if (payload) {
       const boughtData = await this.filmService.getFilmBought(
@@ -83,9 +86,12 @@ export class BrowseService {
         isWishList = true;
       }
 
+      currReview = await this.reviewService.getReviewPair(payload.id, filmId);
+
       user = await this.userService.findOneById(payload.id);
       if (user) {
         res = {
+          id: user.id,
           username: user.username,
           balance: user.balance,
           email: user.email,
@@ -98,6 +104,8 @@ export class BrowseService {
       isWishList,
       film,
       user: res,
+      reviews,
+      currReview,
     };
   }
 }

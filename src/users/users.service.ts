@@ -7,10 +7,14 @@ import { User, Role } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from 'src/dto/user.dto';
 import { hash } from 'bcrypt';
+import { ReviewService } from 'src/review/review.service';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private reviewService: ReviewService,
+  ) {}
 
   async findOne(usernameOrEmail: string): Promise<User | null> {
     return this.prisma.user.findFirst({
@@ -77,12 +81,16 @@ export class UsersService {
 
   async deleteUser(id: string) {
     try {
+      const filmdIds = await this.reviewService.getReviewFilmsIds(id);
+
       const user = await this.prisma.user.delete({
         where: {
           id: id,
           role: Role.USER,
         },
       });
+
+      await this.reviewService.updateReviewBatch(filmdIds);
       return user;
     } catch (error) {
       throw new NotFoundException('User not found');

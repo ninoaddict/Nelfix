@@ -10,7 +10,6 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { NoFilesInterceptor } from '@nestjs/platform-express';
-import { UserValidationPipe } from './users/validation.pipe';
 import { LoginDto } from './dto/user.dto';
 import { AuthGuard } from './auth/auth.guard';
 import { RolesGuard } from './roles/roles.guard';
@@ -29,7 +28,7 @@ export class AppController {
 
   @Post('login')
   @UseInterceptors(NoFilesInterceptor())
-  async signIn(@Body(new UserValidationPipe()) signInDto: LoginDto) {
+  async signIn(@Body() signInDto: LoginDto) {
     const data = await this.appService.signIn(
       signInDto.username,
       signInDto.password,

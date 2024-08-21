@@ -14,7 +14,7 @@ import {
 } from '@nestjs/common';
 import { FilmService } from './film.service';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { CreateFilmRaw, UpdateFilmDto } from 'src/dto/film.dto';
+import { CreateFilmDto, UpdateFilmDto } from 'src/dto/film.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { RolesGuard } from 'src/roles/roles.guard';
 import { Roles } from 'src/roles/roles.decorator';
@@ -40,13 +40,12 @@ export class FilmController {
       video?: Express.Multer.File[];
       cover_image?: Express.Multer.File[];
     },
-    @Body() filmDto: CreateFilmRaw,
+    @Body() filmDto: CreateFilmDto,
   ) {
-    const filmData = this.filmService.parseFilmData(filmDto);
     const data = await this.filmService.uploadFilm(
       files.video ? files.video[0] : null,
       files.cover_image ? files.cover_image[0] : null,
-      filmData,
+      filmDto,
     );
     return {
       status: 'success',
@@ -94,12 +93,12 @@ export class FilmController {
       video?: Express.Multer.File[];
       cover_image?: Express.Multer.File[];
     },
-    @Body() filmDto: CreateFilmRaw,
+    @Body() filmDto: CreateFilmDto,
     @Param('id') id: string,
   ) {
     const filmData: UpdateFilmDto = {
       id,
-      ...this.filmService.parseFilmData(filmDto),
+      ...filmDto,
     };
     const data = await this.filmService.updateFilm(
       files.video ? files.video[0] : null,

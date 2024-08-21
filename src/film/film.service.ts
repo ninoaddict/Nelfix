@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { Film } from '@prisma/client';
 import { S3 } from 'aws-sdk';
-import { CreateFilmDto, CreateFilmRaw, UpdateFilmDto } from 'src/dto/film.dto';
+import { CreateFilmDto, UpdateFilmDto } from 'src/dto/film.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -21,23 +21,6 @@ export class FilmService {
     accessKeyId: process.env.ACCESS_KEY_ID,
     secretAccessKey: process.env.ACCESS_KEY_SECRET,
   });
-
-  parseFilmData(filmRaw: CreateFilmRaw): CreateFilmDto {
-    try {
-      const parsedData = {
-        title: filmRaw.title,
-        description: filmRaw.description,
-        director: filmRaw.director,
-        release_year: parseInt(filmRaw.release_year),
-        genre: filmRaw.genre,
-        price: parseInt(filmRaw.price),
-        duration: parseInt(filmRaw.duration),
-      };
-      return parsedData;
-    } catch (error) {
-      throw new BadRequestException();
-    }
-  }
 
   async uploadFilm(
     video: Express.Multer.File,
@@ -129,6 +112,27 @@ export class FilmService {
       console.log(error);
       throw new NotFoundException('Film not found');
     }
+  }
+
+  async getAllFilmsNumber(query: string) {
+    return await this.prisma.film.count({
+      where: {
+        OR: [
+          {
+            title: {
+              contains: query,
+              mode: 'insensitive',
+            },
+          },
+          {
+            director: {
+              contains: query,
+              mode: 'insensitive',
+            },
+          },
+        ],
+      },
+    });
   }
 
   async getAllFilms(query: string) {
@@ -237,6 +241,30 @@ export class FilmService {
     });
   }
 
+  async getWishListNumber(userId: string, query: string) {
+    return await this.prisma.wishList.count({
+      where: {
+        userId,
+        film: {
+          OR: [
+            {
+              title: {
+                contains: query,
+                mode: 'insensitive',
+              },
+            },
+            {
+              director: {
+                contains: query,
+                mode: 'insensitive',
+              },
+            },
+          ],
+        },
+      },
+    });
+  }
+
   async getWishList(userId: string, query: string) {
     const userWithFilms = await this.prisma.user.findUnique({
       where: {
@@ -314,6 +342,30 @@ export class FilmService {
 
     const films = userWithFilms?.wishList.map((relation) => relation.film);
     return films;
+  }
+
+  async getBoughtFilmsNumber(userId: string, query: string) {
+    return await this.prisma.userBoughtFilm.count({
+      where: {
+        userId,
+        film: {
+          OR: [
+            {
+              title: {
+                contains: query,
+                mode: 'insensitive',
+              },
+            },
+            {
+              director: {
+                contains: query,
+                mode: 'insensitive',
+              },
+            },
+          ],
+        },
+      },
+    });
   }
 
   async getBoughtFilms(userId: string, query: string) {

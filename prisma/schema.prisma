@@ -64,12 +64,13 @@ model WishList {
 }
 
 model FilmReview {
-  userId  String
-  filmId  String
-  rating  Int
-  content String
-  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  film    Film   @relation(fields: [filmId], references: [id], onDelete: Cascade)
+  userId    String
+  filmId    String
+  rating    Int
+  content   String
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  film      Film     @relation(fields: [filmId], references: [id], onDelete: Cascade)
 
   @@id([userId, filmId])
 }
@@ -87,7 +88,7 @@ model Film {
   cover_image_url String
   created_at      DateTime         @default(now())
   updated_at      DateTime         @updatedAt
-  rating          Int              @default(0)
+  rating          Float              @default(0)
   userBoughtFilm  UserBoughtFilm[]
   wishList        WishList[]
   Review          FilmReview[]
