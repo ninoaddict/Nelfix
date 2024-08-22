@@ -206,6 +206,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
 Aplikasi ini sudah di-deploy pada link [berikut](https://nelfix-production.up.railway.app) menggunakan railway.
 
 ### B05 - Lighthouse
+Gambar pengujian tersedia pada folder lighthouse
 
 ### B06 - Responsive Layout
 Aplikasi ini sudah dibuat responsive sesuai dengan ukuran layar perangkat pengguna
