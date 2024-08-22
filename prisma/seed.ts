@@ -82,7 +82,7 @@ async function uploadFiles(
   const coverImageUrl = await uploadFile(
     coverImageBuffer,
     process.env.AWS_S3_BUCKET,
-    'cover_image' + id,
+    'cover_image/' + id,
     'image/jpeg',
   );
 
@@ -91,6 +91,20 @@ async function uploadFiles(
 
 async function seedDatabase() {
   try {
+    await prisma.user.upsert({
+      where: {
+        email: 'admin@gmail.com',
+        username: 'admin',
+      },
+      update: {},
+      create: {
+        email: 'admin@gmail.com',
+        username: 'admin',
+        password: 'admin123',
+        role: 'ADMIN',
+      },
+    });
+
     for (const data of seedData) {
       console.log(`Processing ${data.title}...`);
 

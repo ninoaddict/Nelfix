@@ -107,9 +107,9 @@ export const seedData = [
     price: 10,
     duration: 6900,
     video_url:
-      'https://drive.google.com/file/d/19Zkqeb3N5dAwGVPmNpg22S0bOLi34Fb4/view?usp=drive_link',
+      'https://drive.google.com/file/d/1yn9nq-xkgwCnAoKgGQixJVtDw1kMVwNv/view?usp=drive_link',
     cover_image_url:
-      'https://drive.google.com/file/d/1zvju0n7QOWaGrMOrzdulODshT_3ifc9r/view?usp=drive_link',
+      'https://drive.google.com/file/d/17Wt681rrMU5i3k9qBmytgUZfPneKpdCy/view?usp=drive_link',
   },
   {
     title: 'Avengers: Endgame',
@@ -135,9 +135,9 @@ export const seedData = [
     price: 10,
     duration: 8460,
     video_url:
-      'https://drive.google.com/file/d/12tzqwcxI0Hj5RKYBX0Td39ULMVV03fRJ/view?usp=drive_link',
+      'https://drive.google.com/file/d/1P3Dy7FP68zfRq5kOlOZNWkY_CLbCCX56/view?usp=drive_link',
     cover_image_url:
-      'https://drive.google.com/file/d/1W5VRASv9nEEKlbktCmt_nYKNMciOBGH7/view?usp=drive_link',
+      'https://drive.google.com/file/d/12tzqwcxI0Hj5RKYBX0Td39ULMVV03fRJ/view?usp=drive_link',
   },
   {
     title: 'The Avengers',
