@@ -27,4 +27,4 @@ COPY --chown=node:node --from=build /usr/src/app/dist ./dist
 # uncomment the following line if you run it locally and dont forget to create .env (look .env.example for example)
 # COPY .env .env
 EXPOSE 3000
-CMD [ "node", "dist/src/main.js" ]
+CMD [ "run", "start:prod" ]

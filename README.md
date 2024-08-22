@@ -1,73 +1,203 @@
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
+  <a href="https://nelfix-production.up.railway.app">
+  <img src="src/public/images/logo.png" width="200" alt="Nelfix Logo" />
+  </a>
 </p>
-
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Installation
-
-```bash
-$ npm install
-```
+Nelfix adalah platform streaming film yang dirancang untuk memberikan pengalaman menonton yang mulus dan menyenangkan. Nelfix memungkinkan pengguna untuk menemukan, menelusuri, dan menonton berbagai film dengan mudah. Platform ini mendukung berbagai genre dan menyediakan detail lengkap tentang setiap film, termasuk judul, tahun rilis, durasi, genre, sutradara, dan harga. Nelfix sendiri adalah projek yang dibuat untuk memenuhi tugas seleksi 3 asisten laboratorium programming.
 
 ## Running the app
+Projek ini dapat dijalankan secara lokal maupun melalui link deployment [berikut](https://nelfix-production.up.railway.app). Untuk menjalankan secara lokal, Anda dapat memilih menggunakan docker atau tidak. Endpoint secara lokal tersedia pada [localhost:3000](http://localhost:3000/). 
 
+Untuk memulai menjalankan projek ini secara lokal, lakukan clone terhadap repository ini.
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+$ git clone https://github.com/ninoaddict/Nelfix
+$ cd Nelfix
 ```
 
-## Test
-
+Selanjutnya, buat file ```.env``` pada project anda dan tambahkan environment variables sesuai dengan contoh pada ```.env.example```.
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+DATABASE_URL=""
+SECRET=""
+ACCESS_KEY_ID=""
+ACCESS_KEY_SECRET=""
+AWS_S3_BUCKET=""
 ```
 
-## Support
+### Dengan Docker
+Untuk menjalankan projek ini dengan docker, pastikan docker sudah terunduh pada perangkat Anda. Jika belum, Anda dapat mengunduhnya sesuai dengan perangkat yang digunakan pada [link](https://www.docker.com/products/docker-desktop) berikut.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+- Uncomment line berikut pada ```Dockerfile``` untuk menjalankan projek ini secara lokal
+```bash
+...
+28  # COPY .env .env
+...
+```
 
-## Stay in touch
+- Uncomment line berikut pada ```Dockerfile``` jika anda ingin melakukan seeding terhadap database
+```bash
+...
+15  # RUN npx prisma db seed
+...
+```
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- Lakukan build terhadap docker image dengan menjalankan kode berikut
+```bash
+docker-compose build
+```
 
-## License
+- Jalankan docker container dengan menjalankan kode berikut
+```bash
+docker-compose run
+```
 
-Nest is [MIT licensed](LICENSE).
+- Jika ingin menghentikan program berjalan, jalankan kode berikut
+```bash
+docker-compose down
+```
+
+### Tanpa Docker
+Untuk menjalankan projek ini tanpa docker, pastikan Node.js sudah terunduh pada perangkat Anda. Jika belum, Anda dapat mengunduhnya melalui link [berikut](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
+
+- Unduh semua dependencies untuk projek ini dengan menjalankan kode berikut
+```bash
+npm install
+```
+- Generate prisma client dengan menjalankan kode berikut
+```bash
+npx prisma generate
+```
+- Jika ingin melakukan seeding terhadap database, jalankan kode berikut
+```bash
+npx prisma db seed
+```
+- Lakukan build terhadap nelfix dengan kode berikut
+```bash
+npm run build
+```
+- Jalankan projek ini dengan dengan kode berikut
+```bash
+npm run start:prod
+```
+
+## Design Patterns
+Design patterns adalah solusi terstandarisasi yang sering digunakan untuk masalah desain perangkat lunak yang umum dan berulang. Dengan menggunakan design pattern, developer dapat menghasilkan kode yang _robust_ dan _scalable_. Berikut adalah beberapa design patterns yang digunakan dalam pengembangan projek ini.
+
+### Dependency Injection
+NestJS menggunakan Dependency Injection (DI) untuk mengelola dependencies di seluruh aplikasi. Dengan DI, kita dapat menginjeksi layanan, repositori, dan dependensi lain ke dalam kelas-kelas yang membutuhkannya tanpa harus membuat instance baru secara manual. Hal ini sesuai dengan prinsip Inversion of Control (IoC) dan memudahkan pengujian serta pemeliharaan kode.
+
+Berikut adalah contoh kode yang menggunakan dependency injection pada aplikasi ini.
+
+```typescript
+@Injectable()
+export class FilmService {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly awsS3Service: AwsS3Service,
+  ) {}
+
+  // Metode kelas FilmService
+  ...
+}
+```
+
+### Decorator
+Decorator adalah structural design pattern yang memungkinkan Anda menambahkan perilaku baru ke objek dengan menempatkan objek ini di dalam objek pembungkus khusus yang berisi perilaku tersebut. Dengan decorator, kita dapat menambahkan metadata atau fungsionalitas tambahan pada kelas, metode, atau properti.
+
+Berikut adalah contoh kode yang menggunakan decorator pada aplikasi ini
+```typescript
+import { SetMetadata } from '@nestjs/common';
+import { Role } from '@prisma/client';
+
+export const ROLES_KEY = 'roles';
+export const Roles = (...roles: Role[]) => SetMetadata(ROLES_KEY, roles);
+```
+
+Selain itu, pada Nest, decorator digunakan untuk mendeklarasikan dan mengkonfigurasi berbagai komponen aplikasi seperti controller, service, dan module.
+```typescript
+@Controller('users')
+export class UsersController {
+  constructor(private readonly usersService: UsersService) {}
+
+  @Get()
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
+  async findAll() {
+    const users: User[] = await this.usersService.findAllUser();
+    const data: UserPayload[] = users.map((data: UserPayload) => {
+      return {
+        id: data.id,
+        username: data.username,
+        email: data.email,
+        balance: data.balance,
+      };
+    });
+    return {
+      status: 'success',
+      message: 'Get all users',
+      data,
+    };
+  }
+
+  // endpoints lain pada UsersController
+  ...
+}
+```
+
+### Singleton
+Singleton adalah design pattern yang memastikan bahwa hanya ada satu instance dari sebuah kelas yang dibuat selama siklus hidup aplikasi. Pada projek ini, kita menggunakan Prisma Service sebagai Singleton untuk memastikan bahwa hanya ada satu instance koneksi database yang digunakan di seluruh aplikasi, yang membantu mengurangi overhead dan memudahkan manajemen koneksi.
+
+```typescript
+import { Injectable, OnModuleInit } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
+
+@Injectable()
+export class PrismaService extends PrismaClient implements OnModuleInit {
+  async onModuleInit() {
+    await this.$connect();
+  }
+}
+```
+
+## Endpoints
+
+|Endpoint|Deskripsi|Body|Param|Query|
+|---|---|---|---|---|
+|GET ```/about```|Mendapatkan page about|-|-|-|
+|GET ```/auth/login```|Mendapatkan page login|-|-|-|
+|POST ```/auth/login```|Melakukan login untuk user pada monolith|```username/email```, ```password```|-|-|
+|POST ```/auth/register```|Melakukan registrasi untuk user baru pada monolith|```username```, ```email```, ```first_name```, ```last_name```, ```password```|-|-|
+|POST ```/auth/logout```|Melakukan logout|-|-|-|
+|GET ```/browser```|Mendapatkan page film browse|-||```query```, ```page```, ```limit```|
+|GET ```/browser/:id```|Mendapatkan page detail film|-|```id film```|-|
+|GET ```/films```|Mendapatkan list semua films|-|-|Sesuai spesifikasi|
+|POST ```/films```|Menambahkan film baru|Sesuai spesifikasi|-|-|
+|GET ```/films/:id```|Mendapatkan film berdasarkan id film|-|```id film```|-|
+|PUT ```/films/:id```|Update film sesuai id|Sesuai spesifikasi|```id film```|-|
+|DELETE ```/films/:id```|Hapus film sesuai id|Sesuai spesifikasi|```id film```|-|
+|POST ```/films/buy/:id```|Membeli film sesuai id|-|```id film```|-|
+|GET ```/mylist```|Mendapatkan page daftar film yang sudah dibeli|-|-|-|
+|POST ```/review/:id```|Membeli film sesuai id|```rating```, ```content```|```id film```|-|
+|PUT ```/review/:id```|Update film sesuai id|```rating```, ```content```|```id film```|-|
+|DELETE ```/review/:id```|Menghapus film sesuai id|-|```id film```|-|
+|DELETE ```/review/:id```|Menghapus film sesuai id|-|```id film```|-|
+|GET ```/users```|Mendapatkan semua user|-|-|-|
+|GET ```/users/:id```|Mendapatkan user sesuai id|-|```id user```|-|
+|POST ```/users:id/balance```|Update balance user|```increment```|```id user```|-|
+|DELETE ```/users/:id```|Menghapus user sesuai id|-|```id user```|-|
+|POST ```login```|Melakukan login untuk admin|```username```, ```email```|-|-|
+|GET ```/watch/:id```|Menampilkan page untuk menonton film|-|```id film```|-|
+|GET ```/self```|Mendapatkan data admin|-|-|-|
+|GET ```/wishlist```|-|-|-|-|
+|POST ```/wishlist/:id```|-|-|```id film```|-|
+|DELETE ```/wishlist/:id```|-|-|```id film```|-|
+
+## Author
+
+<pre>
+  Name  : Adril Putra Merin
+  NIM   : 13522068
+  Email : <a href="mailto:13522068@std.stei.itb.ac.id">13522068@std.stei.itb.ac.id</a>
+</pre>
