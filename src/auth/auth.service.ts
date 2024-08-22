@@ -11,19 +11,23 @@ import { User } from '@prisma/client';
 import { compare } from 'bcrypt';
 import { Request, Response } from 'express';
 import { CreateUserDto } from 'src/dto/user.dto';
-import { getCookie } from 'src/lib/cookie';
 import { JwtService } from 'src/jwt/jwt.service';
+import { UtilService } from 'src/util/util.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
+    private readonly utilService: UtilService,
   ) {}
 
   getAuthPage(@Req() req: Request, @Res() res: Response, view: string) {
     try {
-      const token = getCookie(req.headers.cookie, 'jwt-nelfix');
+      const token = this.utilService.getCookie(
+        req.headers.cookie,
+        'jwt-nelfix',
+      );
       if (token) {
         return res.redirect('/');
       }

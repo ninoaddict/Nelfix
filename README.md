@@ -161,6 +161,12 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
 }
 ```
 
+## Tech Stacks
+- Backend : NestJS, Prisma, AWS-SDK
+- Frontend: TailwindCSS, EJS, Flowbite, VideoJS, PostCSS
+- Database: Postgresql, NeonDB, Supabase
+- Storage : AWS S3
+
 ## Endpoints
 
 |Endpoint|Deskripsi|Body|Param|Query|
