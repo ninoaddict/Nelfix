@@ -76,13 +76,13 @@ async function uploadFiles(
   const videoUrl = await uploadFile(
     videoBuffer,
     process.env.AWS_S3_BUCKET,
-    id + '_video',
+    'video/' + id,
     'image/mp4',
   );
   const coverImageUrl = await uploadFile(
     coverImageBuffer,
     process.env.AWS_S3_BUCKET,
-    id + '_cover_image',
+    'cover_image' + id,
     'image/jpeg',
   );
 

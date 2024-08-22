@@ -29,31 +29,34 @@ export class FilmService {
       throw new BadRequestException();
     }
     const id = cuid();
+    try {
+      video.filename = 'video/' + id;
+      const video_url = await this.awsS3Service.uploadFile(video);
 
-    video.filename = 'video/' + id;
-    const video_url = await this.awsS3Service.uploadFile(video);
+      let cover_image_url: string | null = null;
+      if (cover_image) {
+        cover_image.filename = 'cover_image/' + id;
+        cover_image_url = await this.awsS3Service.uploadFile(cover_image);
+      }
 
-    let cover_image_url: string | null = null;
-    if (cover_image) {
-      cover_image.filename = 'cover_image/' + id;
-      cover_image_url = await this.awsS3Service.uploadFile(cover_image);
+      const new_film = await this.prisma.film.create({
+        data: {
+          id,
+          title: filmDto.title,
+          description: filmDto.description,
+          director: filmDto.director,
+          release_year: filmDto.release_year,
+          genre: filmDto.genre,
+          price: filmDto.price,
+          duration: filmDto.duration,
+          video_url,
+          cover_image_url,
+        },
+      });
+      return new_film;
+    } catch (error) {
+      throw new BadRequestException('Film has been uploaded before');
     }
-
-    const new_film = await this.prisma.film.create({
-      data: {
-        id,
-        title: filmDto.title,
-        description: filmDto.description,
-        director: filmDto.director,
-        release_year: filmDto.release_year,
-        genre: filmDto.genre,
-        price: filmDto.price,
-        duration: filmDto.duration,
-        video_url,
-        cover_image_url,
-      },
-    });
-    return new_film;
   }
 
   async updateFilm(
@@ -91,6 +94,7 @@ export class FilmService {
       }
       return data;
     } catch (error) {
+      console.log(error);
       throw new NotFoundException('Film not found');
     }
   }
@@ -110,7 +114,6 @@ export class FilmService {
 
       return data;
     } catch (error) {
-      console.log(error);
       throw new NotFoundException('Film not found');
     }
   }

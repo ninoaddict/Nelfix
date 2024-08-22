@@ -23,6 +23,9 @@ export class CreateFilmDto {
 
   @IsArray()
   @IsString({ each: true })
+  @Transform(({ value }) => {
+    return typeof value === 'string' ? [value] : value;
+  })
   genre: string[];
 
   @IsInt()

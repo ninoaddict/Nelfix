@@ -25,6 +25,7 @@ import { JwtModule } from './jwt/jwt.module';
 import { AwsS3Module } from './aws-s3/aws-s3.module';
 import { UtilModule } from './util/util.module';
 import { AboutModule } from './about/about.module';
+import { AboutController } from './about/about.controller';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ export class AppModule implements NestModule {
         MylistController,
         WishlistController,
         ReviewController,
+        AboutController,
         {
           path: 'films/buy/:id',
           method: RequestMethod.POST,

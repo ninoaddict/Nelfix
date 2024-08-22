@@ -4,7 +4,7 @@ import { S3 } from 'aws-sdk';
 @Injectable()
 export class AwsS3Service {
   private s3 = new S3({
-    accessKeyId: process.env.ACCESSS_KEY_ID,
+    accessKeyId: process.env.ACCESS_KEY_ID,
     secretAccessKey: process.env.ACCESS_KEY_SECRET,
   });
 

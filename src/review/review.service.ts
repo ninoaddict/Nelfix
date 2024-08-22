@@ -155,8 +155,14 @@ export class ReviewService {
     }
   }
 
+  async deleteReviewBatch(userId: string, filmIds: string[]) {
+    for (const filmId of filmIds) {
+      await this.deleteReview(userId, filmId);
+    }
+  }
+
   async updateReviewBatch(filmIds: string[]) {
-    for (const filmId in filmIds) {
+    for (const filmId of filmIds) {
       await this.updateReview(filmId);
     }
   }

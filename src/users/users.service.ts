@@ -75,7 +75,9 @@ export class UsersService {
         role: Role.USER,
       },
       data: {
-        balance: balance + user.balance,
+        balance: {
+          increment: balance,
+        },
       },
     });
     return updatedUser;
@@ -84,6 +86,8 @@ export class UsersService {
   async deleteUser(id: string) {
     try {
       const filmdIds = await this.reviewService.getReviewFilmsIds(id);
+      await this.reviewService.deleteReviewBatch(id, filmdIds);
+      await this.reviewService.updateReviewBatch(filmdIds);
 
       const user = await this.prisma.user.delete({
         where: {
@@ -92,7 +96,6 @@ export class UsersService {
         },
       });
 
-      await this.reviewService.updateReviewBatch(filmdIds);
       return user;
     } catch (error) {
       throw new NotFoundException('User not found');
