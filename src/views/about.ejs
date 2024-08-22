@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Browse page for Nelfix">
+  <link rel="stylesheet" href="/stylesheets/style.css">
+  <link rel="icon" href="/images/logo.png">
+  <title>Home - Nelfix</title>
+  <script src="https://kit.fontawesome.com/d0a301b89a.js" crossorigin="anonymous"></script>
+</head>
+
+<body class="bg-slate-900 text-gray-100">
+  <nav class="border-gray-600 bg-slate-800 fixed w-full z-20 top-0 start-0">
+    <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+      <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
+        <img src="/images/logo.png" class="h-8 w-8" alt="Nelfix Logo" loading="lazy" />
+        <span class="self-center text-2xl font-semibold whitespace-nowrap text-white">Nelfix</span>
+      </a>
+      <div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+        <% if (user) { %>
+        <div class="flex gap-[6px] items-center mr-2 md:mr-4">
+          <i class="fa-solid fa-coins" style="color: #FFD43B;"></i>
+          <p><%= user.balance %></p>
+        </div>
+        <button type="button" class="flex text-sm bg-slate-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-600" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
+          <span class="sr-only">Open user menu</span>
+          <img class="w-8 h-8 p-0.5 rounded-full ring-2 ring-gray-500 hover:bg-slate-400" src="/images/user.png" alt="user photo">
+        </button>
+        <div class="z-50 hidden my-4 text-base list-none divide-y rounded-lg shadow bg-slate-700 divide-gray-600" id="user-dropdown">
+          <div class="px-4 py-3 flex flex-col gap-1">
+            <span class="block text-sm text-white"><%= user.username %></span>
+            <span class="block text-sm truncate text-gray-400"><%= user.email %></span>
+          </div>
+          <ul class="py-2" aria-labelledby="user-menu-button">
+            <li>
+              <a id="sign-out" class="block px-4 py-2 text-sm hover:bg-gray-600 text-gray-200 hover:text-white cursor-pointer">Sign
+                out</a>
+            </li>
+          </ul>
+        </div>
+        <% } else { %>
+        <a href="/auth/login">
+          <button class="relative inline-flex items-center justify-center p-0.5 overflow-hidden text-sm font-medium rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white text-white focus:ring-4 focus:outline-none focus:ring-green-800">
+            <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-gray-900 rounded-md group-hover:bg-opacity-0">
+              Login
+            </span>
+          </button>
+        </a>
+        <% } %>
+        <button data-collapse-toggle="navbar-user" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm rounded-lg md:hidden focus:outline-none focus:ring-2 text-gray-400 hover:bg-gray-700 focus:ring-gray-600" aria-controls="navbar-user" aria-expanded="false">
+          <span class="sr-only">Open main menu</span>
+          <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15" />
+          </svg>
+        </button>
+      </div>
+      <div class="items-center hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
+        <ul class="flex flex-col font-medium p-4 md:p-0 mt-4 border rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 bg-slate-800 border-gray-700">
+          <li>
+            <a href="/browse" class="block py-2 px-3 rounded md:border-0 md:p-0 text-white md:hover:text-slate-500 hover:bg-gray-700 hover:text-white md:hover:bg-transparent">Home</a>
+          </li>
+          <% if (user) { %>
+          <li>
+            <a href="/mylist" class="block py-2 px-3 rounded md:border-0 md:p-0 text-white md:hover:text-slate-500 hover:bg-gray-700 hover:text-white md:hover:bg-transparent">My
+              List</a>
+          </li>
+          <li>
+            <a href="/wishlist" class="block py-2 px-3 rounded md:border-0 md:p-0 text-white md:hover:text-slate-500 hover:bg-gray-700 hover:text-white md:hover:bg-transparent">Wish List</a>
+          </li>
+          <% } %>
+          <li>
+            <a href="/about" class="block py-2 px-3 rounded md:border-0 md:p-0 text-white md:hover:text-slate-500 hover:bg-gray-700 hover:text-white md:hover:bg-transparent">About</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main class="bg-slate-900 text-gray-100 min-h-[82vh] py-8 px-4 sm:px-8 mt-20">
+    <div class="max-w-screen-lg mx-auto">
+      <section class="mb-12">
+        <h1 class="text-4xl font-bold mb-4 text-center">About Us</h1>
+        <p class="text-gray-300 text-lg leading-relaxed text-center">
+          Welcome to Nelfix, your number one source for all things movies and entertainment. We're dedicated to providing you the very best of film streaming, with an emphasis on quality, variety, and customer satisfaction.
+        </p>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-3xl font-bold mb-4">Our Mission</h2>
+        <p class="text-gray-300 text-lg leading-relaxed">
+          At Nelfix, our mission is to make high-quality films accessible to everyone, everywhere. We believe in the power of movies to inspire, educate, and entertain, and we are committed to curating a diverse selection of films from all over the world.
+        </p>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-3xl font-bold mb-4">Our Values</h2>
+        <div class="grid gap-8 sm:grid-cols-2 md:grid-cols-3">
+          <div>
+            <h3 class="text-2xl font-semibold mb-2">Quality</h3>
+            <p class="text-gray-300">
+              We are committed to providing only the highest quality films, ensuring that every viewing experience is top-notch.
+            </p>
+          </div>
+          <div>
+            <h3 class="text-2xl font-semibold mb-2">Diversity</h3>
+            <p class="text-gray-300">
+              Our library includes a wide range of genres, languages, and cultures, reflecting the global nature of film.
+            </p>
+          </div>
+          <div>
+            <h3 class="text-2xl font-semibold mb-2">Innovation</h3>
+            <p class="text-gray-300">
+              We embrace new technologies and innovative approaches to bring the best of film to our users.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="text-3xl font-bold mb-4">Contact Us</h2>
+        <p class="text-gray-300 text-lg leading-relaxed mb-4">
+          Have questions? Want to know more about our services? Get in touch with us!
+        </p>
+        <ul class="text-gray-400">
+          <li><i class="fa-solid fa-envelope mr-2"></i> Email: support@nelfix.com</li>
+          <li><i class="fa-solid fa-phone mr-2"></i> Phone: +62 666 666 666</li>
+          <li class="ml-[2px]"><i class="fa-solid fa-map-marker-alt mr-2"></i> Address: 1234 Nelfix St, Movietown, Movienesia</li>
+        </ul>
+      </section>
+    </div>
+  </main>
+
+  <footer class="rounded-lg shadow bg-slate-800 py-5">
+    <div class="w-full max-w-screen-xl mx-auto p-4">
+      <span class="block text-sm text-center text-gray-400">© 2024 <a href="/" class="hover:underline">Nelfix™</a>. All
+        Rights Reserved.</span>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.js"></script>
+</body>
+
+</html>

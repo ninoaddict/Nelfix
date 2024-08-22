@@ -24,6 +24,7 @@ import { ReviewController } from './review/review.controller';
 import { JwtModule } from './jwt/jwt.module';
 import { AwsS3Module } from './aws-s3/aws-s3.module';
 import { UtilModule } from './util/util.module';
+import { AboutModule } from './about/about.module';
 
 @Module({
   imports: [
@@ -39,26 +40,25 @@ import { UtilModule } from './util/util.module';
     JwtModule,
     AwsS3Module,
     UtilModule,
+    AboutModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes(
-      WatchController,
-      BrowseController,
-      MylistController,
-      WishlistController,
-      ReviewController,
-      {
-        path: 'films/buy/:id',
-        method: RequestMethod.POST,
-      },
-      {
-        path: 'films/wishlist/:id',
-        method: RequestMethod.ALL,
-      },
-    );
+    consumer
+      .apply(AuthMiddleware)
+      .forRoutes(
+        WatchController,
+        BrowseController,
+        MylistController,
+        WishlistController,
+        ReviewController,
+        {
+          path: 'films/buy/:id',
+          method: RequestMethod.POST,
+        },
+      );
   }
 }

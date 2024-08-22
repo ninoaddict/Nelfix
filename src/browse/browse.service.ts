@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { FilmService } from 'src/film/film.service';
 import { ReviewService } from 'src/review/review.service';
 import { UsersService } from 'src/users/users.service';
+import { WishlistService } from 'src/wishlist/wishlist.service';
 
 @Injectable()
 export class BrowseService {
@@ -9,6 +10,7 @@ export class BrowseService {
     private readonly filmService: FilmService,
     private readonly userService: UsersService,
     private readonly reviewService: ReviewService,
+    private readonly wishListService: WishlistService,
   ) {}
 
   async browse(payload, query: string, page: number, limit: number) {
@@ -78,7 +80,7 @@ export class BrowseService {
         isBought = true;
       }
 
-      const wishListData = await this.filmService.getFilmInWishList(
+      const wishListData = await this.wishListService.getFilmInWishList(
         payload.id,
         filmId,
       );
