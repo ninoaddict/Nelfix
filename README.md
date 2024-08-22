@@ -200,6 +200,25 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
 |POST ```/wishlist/:id```|-|-|```id film```|-|
 |DELETE ```/wishlist/:id```|-|-|```id film```|-|
 
+## Bonus
+
+### B02 - Deployment
+Aplikasi ini sudah di-deploy pada link [berikut](https://nelfix-production.up.railway.app) menggunakan railway.
+
+### B05 - Lighthouse
+
+### B06 - Responsive Layout
+Aplikasi ini sudah dibuat responsive sesuai dengan ukuran layar perangkat pengguna
+
+### B10 - Fitur Tambahan
+Terdapat beberapa fitur tambahan pada aplikasi ini antara lain, yaitu
+
+#### 1. Wishlist
+Pengguna yang sudah diauntentikasi dapat menambahkan film yang diminati ke dalam daftar wishlist
+
+#### 2. Fitur Rating dan Review
+Pengguna dapat memberikan rating dan review kepada film yang sudah dibeli. Pengguna lain juga dapat melihat hasil rating dan review ini.
+
 ## Author
 
 <pre>
