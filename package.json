@@ -20,6 +20,9 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "tailwind:css": "postcss src/public/stylesheets/tailwind.css -o src/public/stylesheets/style.css"
   },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.631.0",
     "@nestjs/common": "^10.0.0",
