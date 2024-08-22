@@ -219,6 +219,9 @@ Pengguna yang sudah diauntentikasi dapat menambahkan film yang diminati ke dalam
 #### 2. Fitur Rating dan Review
 Pengguna dapat memberikan rating dan review kepada film yang sudah dibeli. Pengguna lain juga dapat melihat hasil rating dan review ini.
 
+### B11 - Ember
+Image dan video dari suatu film sudah disimpan pada cloud object storage yang dalam hal ini adalah Amazon S3
+
 ## Author
 
 <pre>
