@@ -19,6 +19,7 @@ USER node
 
 FROM node:20-alpine AS production
 ENV NODE_ENV production
+COPY --chown=node:node package*.json ./
 COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
 COPY ./src/views ./src/views
 COPY ./src/public ./src/public
