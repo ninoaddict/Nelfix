@@ -9,8 +9,8 @@ import { UsersService } from 'src/users/users.service';
 @Injectable()
 export class WishlistService {
   constructor(
-    private filmService: FilmService,
-    private userService: UsersService,
+    private readonly filmService: FilmService,
+    private readonly userService: UsersService,
   ) {}
 
   async getWishList(

@@ -7,6 +7,7 @@ import {
   Put,
   Req,
   UnauthorizedException,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { ReviewService } from './review.service';
@@ -14,12 +15,17 @@ import { Request } from 'express';
 import { NoFilesInterceptor } from '@nestjs/platform-express';
 import { CreateReviewDto } from 'src/dto/review.dto';
 import { UserTokenPayload } from 'src/dto/user.dto';
+import { RolesGuard } from 'src/roles/roles.guard';
+import { Roles } from 'src/roles/roles.decorator';
+import { Role } from '@prisma/client';
 
 @Controller('review')
 export class ReviewController {
   constructor(private readonly reviewService: ReviewService) {}
 
   @Post(':id')
+  @UseGuards(RolesGuard)
+  @Roles(Role.USER)
   @UseInterceptors(NoFilesInterceptor())
   async postReview(
     @Req() req: Request,
@@ -42,6 +48,8 @@ export class ReviewController {
   }
 
   @Put(':id')
+  @UseGuards(RolesGuard)
+  @Roles(Role.USER)
   @UseInterceptors(NoFilesInterceptor())
   async putReview(
     @Req() req: Request,

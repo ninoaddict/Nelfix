@@ -6,7 +6,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Film } from '@prisma/client';
-import { S3 } from 'aws-sdk';
+import { AwsS3Service } from 'src/aws-s3/aws-s3.service';
 import { CreateFilmDto, UpdateFilmDto } from 'src/dto/film.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -15,28 +15,29 @@ const cuid = require('cuid');
 
 @Injectable()
 export class FilmService {
-  constructor(private prisma: PrismaService) {}
-
-  private s3 = new S3({
-    accessKeyId: process.env.ACCESS_KEY_ID,
-    secretAccessKey: process.env.ACCESS_KEY_SECRET,
-  });
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly awsS3Service: AwsS3Service,
+  ) {}
 
   async uploadFilm(
-    video: Express.Multer.File,
-    cover_image: Express.Multer.File,
+    video: Express.Multer.File | null,
+    cover_image: Express.Multer.File | null,
     filmDto: CreateFilmDto,
   ) {
-    if (!video || !cover_image) {
+    if (!video) {
       throw new BadRequestException();
     }
     const id = cuid();
 
-    video.filename = id + '_video';
-    const video_url = await this.uploadFile(video);
+    video.filename = 'video/' + id;
+    const video_url = await this.awsS3Service.uploadFile(video);
 
-    cover_image.filename = id + '_cover_image';
-    const cover_image_url = await this.uploadFile(cover_image);
+    let cover_image_url: string | null = null;
+    if (cover_image) {
+      cover_image.filename = 'cover_image/' + id;
+      cover_image_url = await this.awsS3Service.uploadFile(cover_image);
+    }
 
     const new_film = await this.prisma.film.create({
       data: {
@@ -79,14 +80,14 @@ export class FilmService {
 
       // update the video if not null
       if (video) {
-        video.filename = filmDto.id + '_video';
-        await this.uploadFile(video);
+        video.filename = 'video/' + filmDto.id;
+        await this.awsS3Service.uploadFile(video);
       }
 
       // update the cover image if not null
       if (cover_image) {
-        cover_image.filename = filmDto.id + '_cover_image';
-        await this.uploadFile(cover_image);
+        cover_image.filename = 'cover_image/' + filmDto.id;
+        await this.awsS3Service.uploadFile(cover_image);
       }
       return data;
     } catch (error) {
@@ -100,12 +101,12 @@ export class FilmService {
         where: { id },
       });
       // delete video
-      const video = id + '_video';
-      await this.deleteFile(video);
+      const video = 'video/' + id;
+      await this.awsS3Service.deleteFile(video);
 
       // delete cover image
-      const cover_image = id + '_cover_image';
-      await this.deleteFile(cover_image);
+      const cover_image = 'cover_image/' + id;
+      await this.awsS3Service.deleteFile(cover_image);
 
       return data;
     } catch (error) {
@@ -156,7 +157,7 @@ export class FilmService {
     });
     const res = data.map((f) => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { description, video_url, ...r } = f;
+      const { rating, description, video_url, ...r } = f;
       return r;
     });
     return res;
@@ -510,44 +511,5 @@ export class FilmService {
     } catch (error) {
       throw new ConflictException('Film has been bought');
     }
-  }
-
-  async uploadFile(file: Express.Multer.File) {
-    const res = await this.uploadS3Bucket(
-      file.buffer,
-      process.env.AWS_S3_BUCKET,
-      file.filename ? file.filename : file.originalname,
-      file.mimetype,
-    );
-    return res.Location;
-  }
-
-  async uploadS3Bucket(
-    file: Buffer,
-    bucket: string,
-    name: string,
-    mimetype: string,
-  ) {
-    const params = {
-      Bucket: bucket,
-      Key: name,
-      Body: file,
-      ACL: 'public-read',
-      ContentType: mimetype,
-      ContentDisposition: 'inline',
-    };
-    return this.s3.upload(params).promise();
-  }
-
-  async deleteFile(name: string) {
-    await this.deleteS3Bucket(process.env.AWS_S3_BUCKET, name);
-  }
-
-  async deleteS3Bucket(bucket: string, name: string) {
-    const params = {
-      Bucket: bucket,
-      Key: name,
-    };
-    return this.s3.deleteObject(params).promise();
   }
 }

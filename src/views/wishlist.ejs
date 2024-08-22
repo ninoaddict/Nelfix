@@ -108,7 +108,7 @@
       <% films.forEach(film=> { %>
       <a href="/browse/<%= film.id %>">
         <div class="max-w-xs bg-gray-800 text-white rounded-lg shadow-lg overflow-hidden mx-auto w-48 xl:w-52">
-          <img class="object-cover h-[250px] w-full" src="<%= film.cover_image_url %>" alt="Movie Cover">
+          <img class="object-cover h-[250px] w-full" src="<%= film.cover_image_url  ? film.cover_image_url : 'https://placehold.co/400x600' %>" alt="Movie Cover">
           <div class="px-4 py-2">
             <h1 class="text-center mb-1 text-md text-nowrap overflow-hidden">
               <%= film.title %>

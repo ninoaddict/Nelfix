@@ -70,7 +70,9 @@ export class FilmController {
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.ADMIN)
   async getFilmById(@Param('id') id: string) {
-    const data = await this.filmService.getFilmById(id);
+    const res = await this.filmService.getFilmById(id);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { rating, ...data } = res;
     return {
       status: 'success',
       message: 'Get film by id',

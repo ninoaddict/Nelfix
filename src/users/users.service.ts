@@ -1,19 +1,18 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { User, Role } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from 'src/dto/user.dto';
 import { hash } from 'bcrypt';
 import { ReviewService } from 'src/review/review.service';
+import { UtilService } from 'src/util/util.service';
+import { Request } from 'express';
 
 @Injectable()
 export class UsersService {
   constructor(
-    private prisma: PrismaService,
-    private reviewService: ReviewService,
+    private readonly prisma: PrismaService,
+    private readonly reviewService: ReviewService,
+    private readonly utilService: UtilService,
   ) {}
 
   async findOne(usernameOrEmail: string): Promise<User | null> {
@@ -52,13 +51,16 @@ export class UsersService {
     });
   }
 
-  parseBalance(inc: string): number {
-    try {
-      const res = parseInt(inc);
-      return res;
-    } catch (error) {
-      throw new BadRequestException();
-    }
+  self(request: Request) {
+    const token = this.utilService.extractToken(request);
+    return {
+      status: 'success',
+      message: 'Get self',
+      data: {
+        username: request['user']['username'],
+        token,
+      },
+    };
   }
 
   async increaseBalance(id: string, balance: number) {

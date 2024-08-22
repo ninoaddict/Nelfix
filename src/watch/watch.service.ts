@@ -3,7 +3,7 @@ import { FilmService } from 'src/film/film.service';
 
 @Injectable()
 export class WatchService {
-  constructor(private filmService: FilmService) {}
+  constructor(private readonly filmService: FilmService) {}
 
   async getFilm(filmId: string, userId: string) {
     const data = await this.filmService.getFilmBought(filmId, userId);

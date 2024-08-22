@@ -6,9 +6,9 @@ import { UsersService } from 'src/users/users.service';
 @Injectable()
 export class BrowseService {
   constructor(
-    private filmService: FilmService,
-    private userService: UsersService,
-    private reviewService: ReviewService,
+    private readonly filmService: FilmService,
+    private readonly userService: UsersService,
+    private readonly reviewService: ReviewService,
   ) {}
 
   async browse(payload, query: string, page: number, limit: number) {

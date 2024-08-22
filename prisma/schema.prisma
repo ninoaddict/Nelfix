@@ -85,7 +85,7 @@ model Film {
   price           Float
   duration        Int
   video_url       String
-  cover_image_url String
+  cover_image_url String?
   created_at      DateTime         @default(now())
   updated_at      DateTime         @updatedAt
   rating          Float              @default(0)

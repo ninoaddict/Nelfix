@@ -5,13 +5,14 @@ import {
   Get,
   NotFoundException,
   Param,
+  ParseIntPipe,
   Post,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { Role, User } from '@prisma/client';
-import { CreateUserDto, UserPayload } from 'src/dto/user.dto';
+import { UserPayload } from 'src/dto/user.dto';
 import { NoFilesInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { RolesGuard } from 'src/roles/roles.guard';
@@ -19,7 +20,7 @@ import { Roles } from 'src/roles/roles.decorator';
 
 @Controller('users')
 export class UsersController {
-  constructor(private usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) {}
 
   @Get()
   @UseGuards(AuthGuard, RolesGuard)
@@ -38,18 +39,6 @@ export class UsersController {
       status: 'success',
       message: 'Get all users',
       data,
-    };
-  }
-
-  @Post()
-  @UseInterceptors(NoFilesInterceptor())
-  async create(@Body() createUserDto: CreateUserDto) {
-    const user = await this.usersService.create(createUserDto);
-    return {
-      id: user.id,
-      username: user.username,
-      email: user.email,
-      balance: user.balance,
     };
   }
 
@@ -80,12 +69,9 @@ export class UsersController {
   @Roles(Role.ADMIN)
   async increaseBalance(
     @Param('id') id: string,
-    @Body('increment') inc: string,
+    @Body('increment', ParseIntPipe) increment: number,
   ) {
-    const user = await this.usersService.increaseBalance(
-      id,
-      this.usersService.parseBalance(inc),
-    );
+    const user = await this.usersService.increaseBalance(id, increment);
     const data = {
       id: user.id,
       username: user.username,

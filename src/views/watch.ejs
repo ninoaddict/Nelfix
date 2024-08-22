@@ -11,7 +11,7 @@
 </head>
 
 <body class="bg-black text-gray-100 h-screen flex justify-center items-center">
-  <video id="my-video" src="<%= video_url %>" class="video-js vjs-fluid" controls preload="auto" controlslist="nodownload" poster="<%= cover_image_url %>" data-setup='{ "playbackRates": [0.5, 1, 1.5, 2], "responsive": true, "controlBar": { "skipButtons": { "backward": 5, "forward": 5 } } }'>
+  <video id="my-video" src="<%= video_url %>" class="video-js vjs-fluid" controls preload="auto" controlslist="nodownload" poster="<%= film.cover_image_url  ? film.cover_image_url : 'https://placehold.co/400x600' %>" data-setup='{ "playbackRates": [0.5, 1, 1.5, 2], "responsive": true, "controlBar": { "skipButtons": { "backward": 5, "forward": 5 } } }'>
     <p class="vjs-no-js">
       To view this video please enable JavaScript, and consider upgrading to a
       web browser that

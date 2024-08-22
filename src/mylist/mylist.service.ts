@@ -9,8 +9,8 @@ import { UsersService } from 'src/users/users.service';
 @Injectable()
 export class MylistService {
   constructor(
-    private filmService: FilmService,
-    private userService: UsersService,
+    private readonly filmService: FilmService,
+    private readonly userService: UsersService,
   ) {}
 
   async getMyList(userId: string, query: string, page: number, limit: number) {

@@ -1,4 +1,4 @@
-export function parseCookies(cookieHeader: string): Record<string, string> {
+function parseCookies(cookieHeader: string): Record<string, string> {
   const cookies: Record<string, string> = {};
   cookieHeader.split(';').forEach((cookie) => {
     const [name, value] = cookie.split('=').map((c) => c.trim());

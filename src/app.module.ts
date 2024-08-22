@@ -21,6 +21,9 @@ import { WishlistModule } from './wishlist/wishlist.module';
 import { WishlistController } from './wishlist/wishlist.controller';
 import { ReviewModule } from './review/review.module';
 import { ReviewController } from './review/review.controller';
+import { JwtModule } from './jwt/jwt.module';
+import { AwsS3Module } from './aws-s3/aws-s3.module';
+import { UtilModule } from './util/util.module';
 
 @Module({
   imports: [
@@ -33,6 +36,9 @@ import { ReviewController } from './review/review.controller';
     MylistModule,
     WishlistModule,
     ReviewModule,
+    JwtModule,
+    AwsS3Module,
+    UtilModule,
   ],
   controllers: [AppController],
   providers: [AppService],
