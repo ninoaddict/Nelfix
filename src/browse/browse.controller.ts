@@ -1,6 +1,7 @@
-import { Controller, Get, Param, Query, Render, Req } from '@nestjs/common';
+import { Controller, Get, Param, Query, Render } from '@nestjs/common';
 import { BrowseService } from './browse.service';
-import { Request } from 'express';
+import { UserToken } from 'src/users/user.decorator';
+import { UserTokenPayload } from 'src/dto/user.dto';
 
 @Controller('browse')
 export class BrowseController {
@@ -9,13 +10,13 @@ export class BrowseController {
   @Get()
   @Render('home')
   async browse(
-    @Req() req: Request,
+    @UserToken() user: UserTokenPayload | undefined,
     @Query('query') query: string,
     @Query('page') page: number,
     @Query('limit') limit: number,
   ) {
     return await this.browseService.browse(
-      req['user'],
+      user,
       query ? query : '',
       page ? page : 1,
       limit ? limit : 12,
@@ -24,7 +25,10 @@ export class BrowseController {
 
   @Get(':id')
   @Render('detail')
-  async detail(@Req() req: Request, @Param('id') id: string) {
-    return await this.browseService.detail(req['user'], id);
+  async detail(
+    @UserToken() user: UserTokenPayload | undefined,
+    @Param('id') id: string,
+  ) {
+    return await this.browseService.detail(user, id);
   }
 }

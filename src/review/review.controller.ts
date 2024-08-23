@@ -5,19 +5,18 @@ import {
   Param,
   Post,
   Put,
-  Req,
   UnauthorizedException,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { ReviewService } from './review.service';
-import { Request } from 'express';
 import { NoFilesInterceptor } from '@nestjs/platform-express';
 import { CreateReviewDto } from 'src/dto/review.dto';
 import { UserTokenPayload } from 'src/dto/user.dto';
 import { RolesGuard } from 'src/roles/roles.guard';
 import { Roles } from 'src/roles/roles.decorator';
 import { Role } from '@prisma/client';
+import { UserToken } from 'src/users/user.decorator';
 
 @Controller('review')
 export class ReviewController {
@@ -28,11 +27,10 @@ export class ReviewController {
   @Roles(Role.USER)
   @UseInterceptors(NoFilesInterceptor())
   async postReview(
-    @Req() req: Request,
+    @UserToken() user: UserTokenPayload | undefined,
     @Param('id') id: string,
     @Body() createReviewDto: CreateReviewDto,
   ) {
-    const user: UserTokenPayload | undefined = req['user'];
     if (!user) {
       throw new UnauthorizedException();
     }
@@ -52,11 +50,10 @@ export class ReviewController {
   @Roles(Role.USER)
   @UseInterceptors(NoFilesInterceptor())
   async putReview(
-    @Req() req: Request,
+    @UserToken() user: UserTokenPayload | undefined,
     @Param('id') id: string,
     @Body() createReviewDto: CreateReviewDto,
   ) {
-    const user: UserTokenPayload | undefined = req['user'];
     if (!user) {
       throw new UnauthorizedException();
     }
@@ -73,8 +70,10 @@ export class ReviewController {
   }
 
   @Delete(':id')
-  async deleteReview(@Req() req: Request, @Param('id') id: string) {
-    const user: UserTokenPayload | undefined = req['user'];
+  async deleteReview(
+    @UserToken() user: UserTokenPayload | undefined,
+    @Param('id') id: string,
+  ) {
     if (!user) {
       throw new UnauthorizedException();
     }

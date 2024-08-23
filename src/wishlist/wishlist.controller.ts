@@ -5,15 +5,16 @@ import {
   Param,
   Post,
   Query,
-  Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
 import { WishlistService } from './wishlist.service';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { RolesGuard } from 'src/roles/roles.guard';
 import { Role } from '@prisma/client';
 import { Roles } from 'src/roles/roles.decorator';
+import { UserPayload, UserTokenPayload } from 'src/dto/user.dto';
+import { UserToken } from 'src/users/user.decorator';
 
 @Controller('wishlist')
 export class WishlistController {
@@ -21,13 +22,12 @@ export class WishlistController {
 
   @Get()
   async getWishList(
-    @Req() req: Request,
-    @Res() res: Response,
+    @UserToken() user: UserTokenPayload,
     @Query('query') query: string,
     @Query('page') page: number,
     @Query('limit') limit: number,
+    @Res() res: Response,
   ) {
-    const user = req['user'];
     if (!user) {
       res.redirect('/auth/login');
       return;
@@ -45,16 +45,20 @@ export class WishlistController {
   @Post(':id')
   @UseGuards(RolesGuard)
   @Roles(Role.USER)
-  async addToWishList(@Param('id') id: string, @Req() req: Request) {
-    const user = req['user'];
+  async addToWishList(
+    @Param('id') id: string,
+    @UserToken() user: UserPayload | undefined,
+  ) {
     return await this.wishListService.createWishList(user.id, id);
   }
 
   @Delete(':id')
   @UseGuards(RolesGuard)
   @Roles(Role.USER)
-  async removeFromWishList(@Param('id') id: string, @Req() req: Request) {
-    const user = req['user'];
+  async removeFromWishList(
+    @Param('id') id: string,
+    @UserToken() user: UserPayload | undefined,
+  ) {
     return await this.wishListService.removeWishList(user.id, id);
   }
 }

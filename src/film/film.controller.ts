@@ -7,7 +7,6 @@ import {
   Post,
   Put,
   Query,
-  Req,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
@@ -19,7 +18,8 @@ import { AuthGuard } from 'src/auth/auth.guard';
 import { RolesGuard } from 'src/roles/roles.guard';
 import { Roles } from 'src/roles/roles.decorator';
 import { Role } from '@prisma/client';
-import { Request } from 'express';
+import { UserToken } from 'src/users/user.decorator';
+import { UserTokenPayload } from 'src/dto/user.dto';
 
 @Controller('films')
 export class FilmController {
@@ -129,8 +129,7 @@ export class FilmController {
   @Post('buy/:id')
   @UseGuards(RolesGuard)
   @Roles(Role.USER)
-  async buyFilm(@Param('id') id: string, @Req() req: Request) {
-    const user = req['user'];
+  async buyFilm(@Param('id') id: string, @UserToken() user: UserTokenPayload) {
     return await this.filmService.buyFilm(id, user.id);
   }
 }

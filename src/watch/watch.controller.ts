@@ -1,6 +1,8 @@
-import { Controller, Get, Param, Req, Res } from '@nestjs/common';
+import { Controller, Get, Param, Res } from '@nestjs/common';
 import { WatchService } from './watch.service';
-import { Request, Response } from 'express';
+import { Response } from 'express';
+import { UserTokenPayload } from 'src/dto/user.dto';
+import { UserToken } from 'src/users/user.decorator';
 
 @Controller('watch')
 export class WatchController {
@@ -8,11 +10,10 @@ export class WatchController {
 
   @Get(':id')
   async getFilm(
-    @Req() req: Request,
-    @Res() res: Response,
+    @UserToken() user: UserTokenPayload | undefined,
     @Param('id') id: string,
+    @Res() res: Response,
   ) {
-    const user = req['user'];
     if (!user) {
       res.redirect('/auth/login');
       return;

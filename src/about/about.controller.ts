@@ -1,6 +1,7 @@
-import { Controller, Get, Render, Req } from '@nestjs/common';
+import { Controller, Get, Render } from '@nestjs/common';
 import { AboutService } from './about.service';
-import { Request } from 'express';
+import { UserToken } from 'src/users/user.decorator';
+import { UserTokenPayload } from 'src/dto/user.dto';
 
 @Controller('about')
 export class AboutController {
@@ -8,7 +9,7 @@ export class AboutController {
 
   @Get()
   @Render('about')
-  async aboutUs(@Req() req: Request) {
-    return await this.aboutService.aboutUs(req['user']);
+  async aboutUs(@UserToken() user: UserTokenPayload | undefined) {
+    return await this.aboutService.aboutUs(user);
   }
 }
